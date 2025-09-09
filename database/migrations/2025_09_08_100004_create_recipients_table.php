@@ -10,7 +10,6 @@ return new class extends Migration {
     {
         Schema::create('recipients', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Order::class)->constrained();
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('phone');

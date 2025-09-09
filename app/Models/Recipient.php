@@ -14,7 +14,10 @@ class Recipient extends Model
     protected $guarded = [];
 
     protected $casts = [
+        'name' => 'encrypted',
+        'phone' => 'encrypted',
         'address_data' => 'array',
+        'notes' => 'encrypted'
     ];
 
     public function orders(): HasMany

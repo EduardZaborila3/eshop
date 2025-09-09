@@ -10,7 +10,7 @@ class CompanyFactory extends Factory
     {
         return [
             'name' => fake()->company(),
-            'slug' => fake()->unique()->bothify('ID-####'),
+            'slug' => fake()->unique()->bothify('SKU-##??'),
             'email' => fake()->companyEmail(),
             'phone' => fake()->phoneNumber(),
             'address' => fake()->address()

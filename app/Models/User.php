@@ -28,6 +28,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'name' => 'encrypted',
+            'phone' => 'encrypted',
             'address_data' => 'array',
             'password' => 'hashed',
         ];
