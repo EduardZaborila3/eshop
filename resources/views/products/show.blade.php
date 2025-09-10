@@ -14,7 +14,8 @@
         <p class="mt-4 text-lg"><strong>Price:</strong> {{ $product->currency }} {{ $product->price }}</p>
     </div>
 
-    <div class="mt-10 font-semibold text-blue-400">
+    <div class="mt-10 font-semibold text-blue-400 space-x-4">
+        <x-button href="/products/{{ $product->id }}/edit">Edit Product</x-button>
         <a href="/products">Go back</a>
     </div>
 </x-layout>

@@ -5,23 +5,37 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RecipientController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home');
 
-// company routes
-Route::get('/companies', [CompanyController::class, 'index']);
-Route::get('/companies/create', [CompanyController::class, 'create']);
-Route::post('/companies', [CompanyController::class, 'store'])->middleware('auth');
-Route::get('/companies/{company}', [CompanyController::class, 'show']);
-
-// products routes
-Route::get('/products', [ProductController::class, 'index']);
-Route::get('/products/{product}', [ProductController::class, 'show']);
 
 // users routes
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/{user}', [UserController::class, 'show']);
+Route::get('/users/create', [UserController::class, 'create']);
+Route::get('/users/{user}/edit', [UserController::class, 'edit']);
+Route::patch('/users/{user}', [UserController::class, 'update']);
+Route::delete('/users/{user}', [UserController::class, 'destroy']);
+
+// company routes
+Route::get('/companies', [CompanyController::class, 'index']);
+Route::get('/companies/create', [CompanyController::class, 'create']);
+Route::post('/companies', [CompanyController::class, 'store']);
+Route::get('/companies/{company}', [CompanyController::class, 'show']);
+Route::get('/companies/{company}/edit', [CompanyController::class, 'edit']);
+Route::patch('/companies/{company}', [CompanyController::class, 'update']);
+Route::delete('/companies/{company}', [CompanyController::class, 'destroy']);
+
+// products routes
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/create', [ProductController::class, 'create']);
+Route::post('/products', [ProductController::class, 'store']);
+Route::get('/products/{product}', [ProductController::class, 'show']);
+Route::get('/products/{product}/edit', [ProductController::class, 'edit']);
+Route::patch('/products/{product}', [ProductController::class, 'update']);
+Route::delete('/products/{product}', [ProductController::class, 'destroy']);
 
 // recipients routes
 Route::get('/recipients', [RecipientController::class, 'index']);

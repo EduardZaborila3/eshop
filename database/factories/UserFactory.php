@@ -32,11 +32,12 @@ class UserFactory extends Factory
                 'street' => fake()->streetAddress(),
                 'street_number' => fake()->buildingNumber(),
                 'city' => fake()->city(),
-                'postal_code' => fake()->postcode(),
+                'postcode' => fake()->postcode(),
                 'country' => fake()->country(),
             ],
             'role' => fake()->randomElement(['admin', 'staff']),
             'is_active' => fake()->boolean(80),
+            'deleted_at' => null
         ];
     }
 

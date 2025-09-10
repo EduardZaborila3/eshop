@@ -12,6 +12,11 @@ class Company extends Model
     use HasFactory, Notifiable;
     protected $guarded = [];
 
+    protected $casts = [
+        'address' => 'array',
+        'is_active' => 'boolean',
+    ];
+
     public function products(): hasMany {
         return $this->hasMany(Product::class);
     }

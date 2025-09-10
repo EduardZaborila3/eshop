@@ -20,7 +20,8 @@ class OrderFactory extends Factory
             'total_amount' => fake()->randomFloat(2, 10, 1000),
             'currency' => fake()->randomElement(['USD', 'EUR', 'GBP', 'RON']),
             'placed_at' => fake()->dateTimeBetween('-1 month', 'now'),
-            'status_synced_at' => fake()->optional()->dateTimeBetween('-1 month', 'now')
+            'status_synced_at' => fake()->optional()->dateTimeBetween('-1 month', 'now'),
+            'deleted_at' => null
         ];
     }
 }

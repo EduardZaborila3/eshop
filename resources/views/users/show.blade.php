@@ -14,9 +14,10 @@
         <p><strong>Role:</strong> {{ $user->role }}</p>
         <p><strong>Joined At:</strong> {{ $user->created_at->format('F j, Y') }}</p>
         <p><strong>Address:</strong> {{ $user->address_data['country'] }}, {{ $user->address_data['city'] }}, {{ $user->address_data['street'] }}</p>
-        <p><strong>Postal Code:</strong> {{ $user->address_data['postal_code'] }}</p>
+        <p><strong>Postal Code:</strong> {{ $user->address_data['postcode'] }}</p>
 
-        <div class="text-blue-400 mt-6 font-semibold">
+        <div class="text-blue-400 mt-6 font-semibold space-x-4">
+            <x-button href="/users/{{ $user->id }}/edit">Edit User</x-button>
             <a href="/users">Go back</a>
         </div>
 </x-layout>

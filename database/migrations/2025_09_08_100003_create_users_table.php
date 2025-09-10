@@ -21,6 +21,7 @@ return new class extends Migration
             $table->json('address_data')->nullable();
             $table->string('role');
             $table->boolean('is_active');
+            $table->datetime('deleted_at')->nullable()->default(null);
             $table->timestamps();
         });
 

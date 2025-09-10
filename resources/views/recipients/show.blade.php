@@ -14,7 +14,7 @@
 {{--        @endcan--}}
     </div>
 
-    <div class="mt-6 text-blue-400">
+    <div class="mt-6 text-blue-400 font-semibold">
         <a href="/recipients">Go Back</a>
     </div>
 </x-layout>

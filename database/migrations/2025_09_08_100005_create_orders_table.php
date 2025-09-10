@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('currency', 3);
             $table->datetime('placed_at');
             $table->datetime('status_synced_at')->nullable();
+            $table->datetime('deleted_at')->nullable()->default(null);
             $table->timestamps();
         });
     }

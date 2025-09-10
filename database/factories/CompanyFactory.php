@@ -13,7 +13,15 @@ class CompanyFactory extends Factory
             'slug' => fake()->unique()->bothify('SKU-##??'),
             'email' => fake()->companyEmail(),
             'phone' => fake()->phoneNumber(),
-            'address' => fake()->address()
+            'address' => [
+                'street' => fake()->streetAddress(),
+                'street_number' => fake()->buildingNumber(),
+                'city' => fake()->city(),
+                'postcode' => fake()->postcode(),
+                'country' => fake()->country()
+            ],
+            'is_active' => fake()->boolean(70),
+            'deleted_at' => null
         ];
     }
 }

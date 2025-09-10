@@ -16,7 +16,9 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('address')->nullable();
+            $table->json('address')->nullable();
+            $table->boolean('is_active');
+            $table->datetime('deleted_at')->nullable()->default(null);
             $table->timestamps();
         });
     }

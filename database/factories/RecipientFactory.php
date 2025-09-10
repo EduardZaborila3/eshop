@@ -20,7 +20,8 @@ class RecipientFactory extends Factory
                 'postal_code' => fake()->postcode(),
                 'country' => fake()->country()
             ],
-            'notes' => fake()->text(100)
+            'notes' => fake()->text(100),
+            'deleted_at' => null
         ];
     }
 }

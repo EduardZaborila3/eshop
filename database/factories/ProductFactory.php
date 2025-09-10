@@ -15,7 +15,8 @@ class ProductFactory extends Factory
             'price' => fake()->randomFloat(2, 1, 1000),
             'currency' => fake()->randomElement(['USD', 'EUR', 'GBP', 'RON']),
             'stock' => fake()->numberBetween(0, 100),
-            'is_active' => fake()->boolean(70)
+            'is_active' => fake()->boolean(70),
+            'deleted_at' => null
         ];
     }
 }

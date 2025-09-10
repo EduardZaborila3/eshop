@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('currency', 3);
             $table->integer('stock');
             $table->boolean('is_active');
+            $table->datetime('deleted_at')->nullable()->default(null);
             $table->timestamps();
         });
     }

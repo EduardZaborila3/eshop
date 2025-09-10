@@ -10,11 +10,11 @@ class RecipientController
     {
         $recipients = Recipient::all();
 
-        return view('components.recipients.index', ['recipients' => $recipients]);
+        return view('recipients.index', ['recipients' => $recipients]);
     }
 
     public function show(Recipient $recipient)
     {
-        return view('components.recipients.show', ['recipient' => $recipient]);
+        return view('recipients.show', ['recipient' => $recipient]);
     }
 }

@@ -2,6 +2,9 @@
     <x-slot:heading>
         Available Products
     </x-slot:heading>
+    <x-slot:actions>
+        <a href="/products/create" class="bg-blue-400 hover:bg-blue-500 px-4 py-2 rounded-2xl text-white text-sm font-semibold">Add Product</a>
+    </x-slot:actions>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
 
         @foreach($products as $product)

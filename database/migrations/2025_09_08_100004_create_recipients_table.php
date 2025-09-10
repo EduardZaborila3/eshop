@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('phone');
             $table->json('address_data')->nullable();
             $table->text('notes')->nullable();
+            $table->datetime('deleted_at')->nullable()->default(null);
             $table->timestamps();
         });
     }
