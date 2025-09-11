@@ -13,7 +13,7 @@
                     <x-form-field>
                         <x-form-label for="name">Company Name</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="name"  name="name" placeholder="Company Name" />
+                            <x-form-input id="name"  name="name" placeholder="Company Name" value="{{ old('name', $company->name ?? '') }}"/>
 
                             <x-form-error name="name" />
                         </div>
@@ -22,7 +22,7 @@
                     <x-form-field>
                         <x-form-label for="email">Email</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="email"  name="email" placeholder="company@example.com" />
+                            <x-form-input id="email"  name="email" placeholder="company@example.com" value="{{ old('email', $company->email ?? '') }}"/>
 
                             <x-form-error name="email" />
                         </div>
@@ -31,7 +31,7 @@
                     <x-form-field>
                         <x-form-label for="phone">Phone Number</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="phone"  name="phone" placeholder="+40712345678" />
+                            <x-form-input id="phone"  name="phone" placeholder="+40712345678" value="{{ old('phone', $company->phone ?? '') }}"/>
 
                             <x-form-error name="phone" />
                         </div>
@@ -44,7 +44,7 @@
                     <x-form-field>
                         <x-form-label for="street">Street</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="street"  name="street" placeholder="Long Street" />
+                            <x-form-input id="street"  name="street" placeholder="Long Street" value="{{ old('street', $company->address['street'] ?? '') }}"/>
 
                             <x-form-error name="street" />
                         </div>
@@ -53,7 +53,7 @@
                     <x-form-field>
                         <x-form-label for="street_number">Street Number</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="street_number" name="street_number" placeholder="1" />
+                            <x-form-input id="street_number" name="street_number" placeholder="1" value="{{ old('street_number', $company->address['street_number'] ?? '') }}"/>
 
                             <x-form-error name="street_number" />
                         </div>
@@ -62,7 +62,7 @@
                     <x-form-field>
                         <x-form-label for="city">City</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="city" name="city" placeholder="New York" />
+                            <x-form-input id="city" name="city" placeholder="New York" value="{{ old('city', $company->address['city'] ?? '') }}"/>
 
                             <x-form-error name="city" />
                         </div>
@@ -71,7 +71,7 @@
                     <x-form-field>
                         <x-form-label for="postcode">Postcode</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="postcode" name="postcode" placeholder="600000" />
+                            <x-form-input id="postcode" name="postcode" placeholder="600000" value="{{ old('postcode', $company->address['postcode'] ?? '') }}"/>
 
                             <x-form-error name="postcode" />
                         </div>
@@ -80,7 +80,7 @@
                     <x-form-field>
                         <x-form-label for="country">Country/State</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="country" name="country" placeholder="California" />
+                            <x-form-input id="country" name="country" placeholder="California" value="{{ old('country', $company->address['country'] ?? '') }}"/>
 
                             <x-form-error name="country" />
                         </div>

@@ -8,7 +8,7 @@ class UserController
 {
     public function index()
     {
-        $users = User::where('deleted_at', null)->get();
+        $users = User::all();
 
         return view('users.index', ['users' => $users]);
     }
@@ -60,9 +60,7 @@ class UserController
 
     public function destroy(User $user)
     {
-        $user->update([
-           'deleted_at' => now()
-        ]);
+        $user->delete();
 
         return redirect('/users');
     }

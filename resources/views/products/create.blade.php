@@ -12,7 +12,7 @@
                     <x-form-field>
                         <x-form-label for="name">Product Name</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="name"  name="name" placeholder="Product Name" />
+                            <x-form-input id="name"  name="name" value="{{ old('name', $product->name ?? '') }}" placeholder="Product Name" />
 
                             <x-form-error name="name" />
                         </div>
@@ -21,7 +21,7 @@
                     <x-form-field>
                         <x-form-label for="price">Price</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="price"  name="price" placeholder="100" />
+                            <x-form-input id="price"  name="price" value="{{ old('price', $product->price ?? '') }}" placeholder="100" />
 
                             <x-form-error name="price" />
                         </div>
@@ -30,7 +30,7 @@
                     <x-form-field>
                         <x-form-label for="currency">Currency</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="currency"  name="currency" placeholder="EUR" />
+                            <x-form-input id="currency"  name="currency" value="{{ old('stock', $product->currency ?? '') }}" placeholder="EUR" />
 
                             <x-form-error name="currency" />
                         </div>
@@ -39,7 +39,7 @@
                     <x-form-field>
                         <x-form-label for="stock">Stock</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="stock"  name="stock" placeholder="60" />
+                            <x-form-input id="stock"  name="stock" value="{{ old('stock', $product->stock ?? '') }}" placeholder="60" />
 
                             <x-form-error name="stock" />
                         </div>

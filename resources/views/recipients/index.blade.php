@@ -2,6 +2,9 @@
     <x-slot:heading>
         Recipients
     </x-slot:heading>
+    <x-slot:actions>
+        <x-action-button href="/recipients/create">Add Recipient</x-action-button>
+    </x-slot:actions>
 
     <div class="space-y-4 ">
         @foreach($recipients as $recipient)

@@ -39,9 +39,17 @@ Route::delete('/products/{product}', [ProductController::class, 'destroy']);
 
 // recipients routes
 Route::get('/recipients', [RecipientController::class, 'index']);
+Route::get('/recipients/create', [RecipientController::class, 'create']);
+Route::post('/recipients', [RecipientController::class, 'store']);
 Route::get('/recipients/{recipient}', [RecipientController::class, 'show']);
+Route::get('/recipients/{recipient}/edit', [RecipientController::class, 'edit']);
+Route::patch('/recipients/{recipient}', [RecipientController::class, 'update']);
+Route::delete('/recipients/{recipient}', [RecipientController::class, 'destroy']);
 
 // orders routes
 Route::get('/orders', [OrderController::class, 'index']);
 Route::get('/orders/{order}', [OrderController::class, 'show']);
+
+Route::get('/companies/{company}/orders/create', [OrderController::class, 'create']);
+Route::post('/companies/{company}/orders', [OrderController::class, 'store']);
 

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
+use App\Services\CompanyService;
 
 class CompanyController
 {
     public function index() {
-        $companies = Company::where('deleted_at', null)->get();
+        $companies = Company::all();
 
         return view('companies.index', [
             'companies' => $companies
@@ -24,47 +27,12 @@ class CompanyController
         return view('companies.create');
     }
 
-    public function store() {
-
-        // IN REQUEST FILE
-        request()->validate([
-            'name' => ['required', 'min:3'],
-            'email' => ['required', 'email'],
-            'phone' => ['required', 'min:10', 'numeric'],
-            'street' => ['required'],
-            'street_number' => ['required', 'numeric'],
-            'city' => ['required'],
-            'postcode' => ['required', 'min:4'],
-            'country' => ['required'],
-            'is_active' => ['required']
-        ]);
-
-        // IN SERVICE
-        $address = request('street') . ' '
-            . request('street_number') . ', '
-            . request('city') . ' '
-            . request('postcode') . ', '
-            . request('country');
-
-        $company = Company::create([
-            'name' => request('name'),
-            'email' => request('email'),
-            'phone' => request('phone'),
-            'address' => [
-                'street' => request('street'),
-                'street_number' => request('street_number'),
-                'city' => request('city'),
-                'postcode' => request('postcode'),
-                'country' => request('country')
-            ],
-            'slug' => fake()->unique()->bothify('SKU-##??'),
-            'is_active' => request('is_active'),
-            'deleted_at' => null,
-        ]);
+    public function store(StoreCompanyRequest $request, CompanyService $companyService) {
+        $company = $companyService->storeCompany($request->validated());
 
 //        Mail::to($job->employer->user)->queue(new JobPosted($job));
 
-        return redirect('/companies');
+        return view('companies.show', ['company' => $company]);
     }
 
     public function edit(Company $company)
@@ -72,39 +40,15 @@ class CompanyController
         return view('companies.edit', ['company' => $company]);
     }
 
-    public function update(Company $company) {
-        request()->validate([
-            'name' => ['required', 'min:3'],
-            'email' => ['required', 'email'],
-            'phone' => ['required', 'min:10'],
-            'street' => ['required'],
-            'street_number' => ['required', 'numeric'],
-            'city' => ['required'],
-            'postcode' => ['required', 'min:4'],
-            'country' => ['required'],
-            'is_active' => ['required']
-        ]);
+    public function update(UpdateCompanyRequest $request, Company $company, CompanyService $companyService) {
+        $company = $companyService->updateCompany($company, $request->validated());
 
-        $company->update([
-            'name' => request('name'),
-            'email' => request('email'),
-            'phone' => request('phone'),
-            'address' => [
-                'street' => request('street'),
-                'street_number' => request('street_number'),
-                'city' => request('city'),
-                'postcode' => request('postcode'),
-                'country' => request('country')
-            ],
-            'is_active' => request('is_active')
-        ]);
-
-        return redirect("/companies/{$company->id}");
+        return view('companies.show', ['company' => $company]);
     }
 
     public function destroy(Company $company)
     {
-        $company->update(['deleted_at' => now()]);
+        $company->delete();
 
         return redirect('/companies');
     }

@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
 use App\Models\Company;
 use App\Models\Product;
+use App\Services\ProductService;
 
 class ProductController
 {
     public function index()
     {
-        $products = Product::where('deleted_at', null)->get();
+        $products = Product::all();
 
         return view('products.index', ['products' => $products]);
     }
@@ -21,38 +23,17 @@ class ProductController
 
     public function create()
     {
-        $companies = Company::where('deleted_at', null)
-            ->where('is_active', true)
-            ->get();
-
+        $companies = Company::all();
         return view('products.create', ['companies' => $companies]);
     }
 
-    public function store(Product $product)
+    public function store(StoreProductRequest $request, ProductService $productService)
     {
-        request()->validate([
-            'name' => ['required', 'min:3'],
-            'price' => ['required', 'numeric'],
-            'company_id' => ['required'],
-            'currency' => ['required'],
-            'stock' => ['required', 'numeric'],
-            'is_active' => ['required']
-        ]);
-
-        $product = Product::create([
-            'name' => request('name'),
-            'price' => request('price'),
-            'company_id' => request('company_id'),
-            'currency' => request('currency'),
-            'is_active' => request('is_active'),
-            'stock' => request('stock'),
-            'sku' => fake()->unique()->bothify('ID-####'),
-            'deleted_at' => null
-        ]);
+        $product = $productService->storeProduct($request->validated());
 
 //        Mail::to($job->employer->user)->queue(new JobPosted($job));
 
-        return redirect('/products');
+        return view('products.show', ['product' => $product]);
     }
 
     public function edit(Product $product) {
@@ -78,7 +59,7 @@ class ProductController
 
     public function destroy(Product $product)
     {
-        $product->update(['deleted_at' => now()]);
+        $product->delete();
 
         return redirect('/products');
     }
