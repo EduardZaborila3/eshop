@@ -32,7 +32,8 @@ class CompanyController
 
 //        Mail::to($job->employer->user)->queue(new JobPosted($job));
 
-        return view('companies.show', ['company' => $company]);
+        return redirect()->route('companies.show', $company)
+            ->with('success', 'Company created successfully!');
     }
 
     public function edit(Company $company)

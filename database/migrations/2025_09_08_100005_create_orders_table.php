@@ -21,10 +21,11 @@ return new class extends Migration {
             $table->integer('total_items');
             $table->decimal('total_amount', 10, 2);
             $table->string('currency', 3);
-            $table->datetime('placed_at');
             $table->datetime('status_synced_at')->nullable();
             $table->datetime('deleted_at')->nullable()->default(null);
-            $table->timestamps();
+            $table->timestamp('placed_at');
+            $table->timestamp('updated_at');
+
         });
     }
 

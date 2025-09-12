@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <x-slot:heading>
         Add New Product
     </x-slot:heading>
@@ -98,4 +98,4 @@
         </div>
     </form>
 
-</x-layout>
+</x-app-layout>

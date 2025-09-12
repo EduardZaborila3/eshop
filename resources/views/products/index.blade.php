@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <x-slot:heading>
         Available Products
     </x-slot:heading>
@@ -24,4 +24,4 @@
         @endforeach
 
     </div>
-</x-layout>
+</x-app-layout>

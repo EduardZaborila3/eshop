@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <x-slot:heading>
         Edit Company: {{ $company->name }}
     </x-slot:heading>
@@ -200,4 +200,4 @@
         @method('DELETE')
     </form>
 
-</x-layout>
+</x-app-layout>

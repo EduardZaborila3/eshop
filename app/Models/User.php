@@ -26,15 +26,12 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'name' => 'encrypted',
-            'phone' => 'encrypted',
-            'address_data' => 'array',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'name' => 'encrypted',
+        'phone' => 'encrypted',
+        'address_data' => 'array',
+        'password' => 'hashed',
+    ];
 
     public function orders(): hasMany
     {

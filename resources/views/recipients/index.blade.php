@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <x-slot:heading>
         Recipients
     </x-slot:heading>
@@ -14,4 +14,4 @@
                 </div>
             </a>
         @endforeach
-</x-layout>
+</x-app-layout>

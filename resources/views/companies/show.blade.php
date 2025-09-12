@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <x-slot:heading>
         Company Details
     </x-slot:heading>
@@ -19,5 +19,5 @@
         <x-button href="/companies/{{ $company->id }}/edit">Edit Company</x-button>
         <a href="/companies">Go back</a>
     </div>
-</x-layout>
+</x-app-layout>
 

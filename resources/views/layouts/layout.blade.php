@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>Home Page</title>
     @vite(['resources/js/app.js'])
@@ -31,12 +33,12 @@
                                 <x-nav-link href="/register" :active="request()->is('register')">Register</x-nav-link>
                             @endguest
 
-{{--                            @auth--}}
-{{--                                <form method="POST" action="/logout">--}}
-{{--                                    @csrf--}}
-{{--                                    <x-form-button>Log Out</x-form-button>--}}
-{{--                                </form>--}}
-{{--                            @endauth--}}
+                            @auth
+                                <form method="POST" action="/logout">
+                                    @csrf
+                                    <x-form-button>Log Out</x-form-button>
+                                </form>
+                            @endauth
                         </div>
 
                     </div>
@@ -45,7 +47,7 @@
         </nav>
         <header class="relative bg-white shadow-sm">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex items-center justify-between">
-                <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ $heading }}</h1>
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ $heading ?? 'Dashboard' }}</h1>
                 <div>{{ $actions ?? '' }}</div>
             </div>
         </header>
@@ -55,6 +57,35 @@
             </div>
         </main>
     </div>
+    <!-- Include this at the bottom of your <body> before </body> -->
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Toastify({
+                    text: "{{ session('success') }}",
+                    duration: 4000, // 4 seconds
+                    gravity: "top", // top or bottom
+                    position: "right", // left, center, right
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    close: true, // adds a close button
+                }).showToast();
+            });
+        </script>
+    @endif
 
+    @if(session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Toastify({
+                    text: "{{ session('success') }}",
+                    duration: 4000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    close: true,
+                }).showToast();
+            });
+        </script>
+    @endif
 </body>
 </html>

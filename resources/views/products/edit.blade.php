@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <x-slot:heading>
         Edit Product: {{ $product->name }}
     </x-slot:heading>
@@ -128,4 +128,4 @@
         @method('DELETE')
     </form>
 
-</x-layout>
+</x-app-layout>

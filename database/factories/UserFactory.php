@@ -37,6 +37,7 @@ class UserFactory extends Factory
             ],
             'role' => fake()->randomElement(['admin', 'staff']),
             'is_active' => fake()->boolean(80),
+            'remember_token' => Str::random(10),
             'deleted_at' => null
         ];
     }

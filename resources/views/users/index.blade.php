@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <x-slot:heading>
         Users
     </x-slot:heading>
@@ -22,4 +22,4 @@
 
 
     </div>
-</x-layout>
+</x-app-layout>

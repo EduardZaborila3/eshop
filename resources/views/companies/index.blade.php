@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <x-slot:heading>
         Companies
     </x-slot:heading>
@@ -27,4 +27,4 @@
 
 
     </div>
-</x-layout>
+</x-app-layout>

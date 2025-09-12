@@ -6,7 +6,7 @@ use App\Models\Company;
 
 class CompanyService
 {
-    public function storeCompany(array $data): Company
+    public function storeCompany(): Company
     {
         $address = request('street') . ' '
             . request('street_number') . ', '

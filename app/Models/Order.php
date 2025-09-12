@@ -14,6 +14,7 @@ class Order extends Model
     use HasFactory, Notifiable, softDeletes;
 
     protected $guarded = [];
+    public $timestamps = false;
 
     public function products(): belongsToMany
     {

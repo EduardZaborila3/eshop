@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('is_active');
             $table->datetime('deleted_at')->nullable()->default(null);
             $table->timestamps();
+            $table->rememberToken();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

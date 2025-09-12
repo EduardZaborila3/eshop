@@ -1,7 +1,18 @@
-<x-layout>
+<x-app-layout>
     <x-slot:heading>
         Add New Company
     </x-slot:heading>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    @if(session('success'))
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 4000)"
+            class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg"
+        >
+            {{ session('success') }}
+        </div>
+    @endif
     <form method="POST" action="/companies">
         @csrf
         <div class="space-y-12">
@@ -122,5 +133,4 @@
             <x-form-button>Save</x-form-button>
         </div>
     </form>
-
-</x-layout>
+</x-app-layout>

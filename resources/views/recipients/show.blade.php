@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <x-slot:heading>
         Recipient Details
     </x-slot:heading>
@@ -27,4 +27,4 @@
         <x-button href="/recipients/{{ $recipient->id }}/edit">Edit Recipient</x-button>
         <a href="/recipients">Go Back</a>
     </div>
-</x-layout>
+</x-app-layout>
