@@ -24,6 +24,7 @@ return new class extends Migration
             $table->datetime('deleted_at')->nullable()->default(null);
             $table->timestamps();
             $table->rememberToken();
+            $table->index('email');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

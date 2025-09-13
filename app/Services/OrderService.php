@@ -39,7 +39,7 @@ class OrderService
         return Order::create([
             'company_id' => $data['company_id'],
             'recipient_id' => $data['recipient_id'],
-            'user_id' => random_int(1, 6), // Temporary until auth is implemented
+            'user_id' => auth()->user()->id,
             'status' => $data['status'],
             'total_items' => $data['total_items'],
             'total_amount' => $data['total_amount'],

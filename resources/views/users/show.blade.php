@@ -16,8 +16,12 @@
         <p><strong>Address:</strong> {{ data_get($user, 'address_data.country') }}, {{ data_get($user, 'address_data.city') }}, {{ data_get($user, 'address_data.street') }}, {{ data_get($user, 'address_data.street_number') }}</p>
         <p><strong>Postal Code:</strong> {{ data_get($user, 'address_data.postcode') }}</p>
 
-        <div class="text-blue-400 mt-6 font-semibold space-x-4">
-            <x-button href="/users/{{ $user->id }}/edit">Edit User</x-button>
-            <a href="/users">Go back</a>
-        </div>
+        @auth
+            @if(auth()->user()->role === 'admin')
+                <div class="text-blue-400 mt-6 font-semibold space-x-4">
+                    <x-button href="/users/{{ $user->id }}/edit">Edit User</x-button>
+                    <a href="/users">Go back</a>
+                </div>
+            @endif
+        @endauth
 </x-layout>

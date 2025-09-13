@@ -11,6 +11,8 @@ use App\Services\OrderService;
 
 class OrderController
 {
+    public function __construct(protected OrderService $orderService) {}
+
     public function index()
     {
         $orders = Order::all();
@@ -32,25 +34,26 @@ class OrderController
             'company' => $company]);
     }
 
-    public function store(StoreOrderRequest $request, OrderService $orderService)
+    public function store(StoreOrderRequest $request)
     {
         $data = $request->validated();
 
-        $data['total_items'] = $orderService->getTotalItems($data['product_ids']);
-        $data['total_amount'] = $orderService->getTotalAmount($data['product_ids']);
-        $data['currency'] = $orderService->getCurrency($data['product_ids']);
+        $data['total_items'] = $this->orderService->getTotalItems($data['product_ids']);
+        $data['total_amount'] = $this->orderService->getTotalAmount($data['product_ids']);
+        $data['currency'] = $this->orderService->getCurrency($data['product_ids']);
 
-        $order = $orderService->storeOrder($data);
+        $order = $this->orderService->storeOrder($data);
 
         $order->products()->attach($data['product_ids']);
 
         $order->load('recipient', 'products', 'company');
 
-        return view('orders.show', ['order' => $order]);
+        return redirect()->route('orders.show', ['order' => $order])
+            ->with('success', 'Order created successfully!');
     }
 
-    public function edit(Order $order, OrderService $orderService) {
-        $companyProducts = $orderService->getProducts($order->company_id);
+    public function edit(Order $order) {
+        $companyProducts = $this->orderService->getProducts($order->company_id);
         $orderProductIds = $order->products->pluck('id')->toArray();
 
         return view('orders.edit', [
@@ -60,25 +63,27 @@ class OrderController
             ]);
     }
 
-    public function update(OrderService$orderService, Order $order, UpdateOrderRequest $request)
+    public function update(Order $order, UpdateOrderRequest $request)
     {
         $data = $request->validated();
 
-        $data['total_items']  = $orderService->getTotalItems($data['product_ids']);
-        $data['total_amount'] = $orderService->getTotalAmount($data['product_ids']);
-        $data['currency'] = $orderService->getCurrency($data['product_ids']);
+        $data['total_items']  = $this->orderService->getTotalItems($data['product_ids']);
+        $data['total_amount'] = $this->orderService->getTotalAmount($data['product_ids']);
+        $data['currency'] = $this->orderService->getCurrency($data['product_ids']);
 
-        $updatedOrder = $orderService->updateOrder($order, $data);
+        $updatedOrder = $this->orderService->updateOrder($order, $data);
 
         $updatedOrder->products()->sync($data['product_ids']);
 
-        return view('orders.show', ['order' => $updatedOrder]);
+        return redirect()->route('orders.show', ['order' => $updatedOrder])
+            ->with('success', 'Order updated successfully!');
     }
 
     public function destroy(Order $order)
     {
         $order->delete();
 
-        return redirect('/orders');
+        return redirect()->route('orders.destroy')
+            ->with('success', 'Order deleted successfully!');
     }
 }

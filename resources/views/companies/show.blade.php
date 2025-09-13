@@ -16,7 +16,11 @@
     </div>
 
     <div class="mt-10 font-semibold text-blue-400 space-x-4">
-        <x-button href="/companies/{{ $company->id }}/edit">Edit Company</x-button>
+    @auth
+        @if(auth()->user()->role === 'admin')
+            <x-button href="/companies/{{ $company->id }}/edit">Edit Company</x-button>
+        @endif
+    @endauth
         <a href="/companies">Go back</a>
     </div>
 </x-app-layout>

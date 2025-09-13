@@ -8,7 +8,7 @@
         <p><strong>Product Unique Identifier: </strong>{{ $product->sku }}</p>
         <p><strong>Status:</strong>
             <span class="{{ $product->is_active == 1 ? 'text-green-500' : 'text-red-600' }}">
-                {{ $product->is_active == 1 ? "Product is available" : "Product is not available" }}
+                {{ $product->is_active == 1 ? "Product is active" : "Product is not active" }}
             </span>
         </p>
         <p class="mt-4 text-lg"><strong>Price:</strong> {{ $product->currency }} {{ $product->price }}</p>

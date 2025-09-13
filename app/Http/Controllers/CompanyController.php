@@ -6,11 +6,14 @@ use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
 use App\Services\CompanyService;
+use Illuminate\Support\Facades\Mail;
 
 class CompanyController
 {
+    public function __construct(protected CompanyService $companyService) {}
+
     public function index() {
-        $companies = Company::all();
+        $companies = Company::orderBy("name", "asc")->paginate(3);
 
         return view('companies.index', [
             'companies' => $companies
@@ -27,8 +30,8 @@ class CompanyController
         return view('companies.create');
     }
 
-    public function store(StoreCompanyRequest $request, CompanyService $companyService) {
-        $company = $companyService->storeCompany($request->validated());
+    public function store(StoreCompanyRequest $request) {
+        $company = $this->companyService->storeCompany($request->validated());
 
 //        Mail::to($job->employer->user)->queue(new JobPosted($job));
 
@@ -41,16 +44,18 @@ class CompanyController
         return view('companies.edit', ['company' => $company]);
     }
 
-    public function update(UpdateCompanyRequest $request, Company $company, CompanyService $companyService) {
-        $company = $companyService->updateCompany($company, $request->validated());
+    public function update(UpdateCompanyRequest $request, Company $company) {
+        $company = $this->companyService->updateCompany($company, $request->validated());
 
-        return view('companies.show', ['company' => $company]);
+        return redirect()->route('companies.show', ['company' => $company])
+            ->with('success', 'Company updated successfully!');
     }
 
     public function destroy(Company $company)
     {
         $company->delete();
 
-        return redirect('/companies');
+        return redirect()->route('companies.destroy')
+            ->with('success', 'Company deleted successfully!');
     }
 }

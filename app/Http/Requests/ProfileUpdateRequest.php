@@ -9,6 +9,10 @@ use Illuminate\Validation\Rules;
 
 class ProfileUpdateRequest extends FormRequest
 {
+    public function authorize()
+    {
+        return true;
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -16,24 +20,26 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = request('user');
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'min:3'],
             'email' => [
                 'required',
                 'string',
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id),
+                Rule::unique(User::class)->ignore($userId),
             ],
-            'phone' => ['required', 'string', 'max:20'],
-            'street' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:20', 'min:9'],
+            'street' => ['required', 'string', 'max:255', 'min:3'],
             'street_number' => ['required', 'string', 'max:10'],
-            'city' => ['required', 'string', 'max:100'],
-            'country' => ['required', 'string', 'max:100'],
-            'postcode' => ['required', 'string', 'max:10'],
+            'city' => ['required', 'string', 'max:100', 'min:3'],
+            'country' => ['required', 'string', 'max:100', 'min:3'],
+            'postcode' => ['required', 'string', 'max:10', 'min:3'],
             'role' => ['required', 'in:admin,staff'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'is_active' => ['required']
         ];
+
     }
 }

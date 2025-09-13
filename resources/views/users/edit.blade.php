@@ -25,6 +25,26 @@
                         </div>
                     </div>
 
+                    @if(auth()->user()->id == $user->id)
+                        <div class="sm:col-span-4">
+                            <label for="email" class="block text-sm/6 font-medium text-gray-500">Email</label>
+                            <div class="mt-2">
+                                <div class="flex items-center rounded-md bg-white/5 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-500">
+                                    <input id="email"
+                                           type="text"
+                                           name="email"
+                                           value="{{ $user->email }}"
+                                           class="rounded-md border border-gray-400 block min-w-0 grow bg-transparent py-1.5 px-3 text-base text-gray-900 placeholder:text-gray-500 focus:outline-none sm:text-sm/6"
+                                           required
+                                    />
+                                </div>
+                                @error('email')
+                                <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="sm:col-span-4">
                         <label for="phone" class="block text-sm/6 font-medium text-gray-500">Phone</label>
                         <div class="mt-2">
@@ -133,27 +153,29 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-4">
-                        <label class="block text-sm/6 font-medium text-gray-500">Role</label>
-                        <div class="mt-2 flex gap-4">
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="role" value="1"
-                                       class="form-radio text-indigo-600"
-                                    {{ old('role', $user->role) == 'staff' ? 'checked' : '' }}>
-                                <span class="ml-2 text-gray-500">Staff</span>
-                            </label>
+                    @if(auth()->user()->role === 'admin' && auth()->user()->id != $user->id)
+                        <div class="sm:col-span-4">
+                            <label class="block text-sm/6 font-medium text-gray-500">Role</label>
+                            <div class="mt-2 flex gap-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="role" value="staff"
+                                           class="form-radio text-indigo-600"
+                                        {{ old('role', $user->role) == 'staff' ? 'checked' : '' }}>
+                                    <span class="ml-2 text-gray-500">Staff</span>
+                                </label>
 
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="role" value="admin"
-                                       class="form-radio text-indigo-600"
-                                    {{ old('role', $user->role) == 'admin' ? 'checked' : '' }}>
-                                <span class="ml-2 text-gray-500">Admin</span>
-                            </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="role" value="admin"
+                                           class="form-radio text-indigo-600"
+                                        {{ old('role', $user->role) == 'admin' ? 'checked' : '' }}>
+                                    <span class="ml-2 text-gray-500">Admin</span>
+                                </label>
+                            </div>
+                            @error('is_active')
+                            <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
-                        @error('is_active')
-                        <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    @endif
 
                     <div class="sm:col-span-4">
                         <label class="block text-sm/6 font-medium text-gray-500">Activity</label>

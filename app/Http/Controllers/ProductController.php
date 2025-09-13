@@ -9,6 +9,7 @@ use App\Services\ProductService;
 
 class ProductController
 {
+    public function __construct(protected ProductService $productService) {}
     public function index()
     {
         $products = Product::all();
@@ -27,13 +28,14 @@ class ProductController
         return view('products.create', ['companies' => $companies]);
     }
 
-    public function store(StoreProductRequest $request, ProductService $productService)
+    public function store(StoreProductRequest $request)
     {
-        $product = $productService->storeProduct($request->validated());
+        $product = $this->productService->storeProduct($request->validated());
 
 //        Mail::to($job->employer->user)->queue(new JobPosted($job));
 
-        return view('products.show', ['product' => $product]);
+        return redirect()->route('products.show', ['product' => $product])
+            ->with('success', 'Product created successfully!');
     }
 
     public function edit(Product $product) {
@@ -54,13 +56,15 @@ class ProductController
         // update the product
         $product->update($validated);
 
-        return redirect('/products');
+        return redirect()->route('products.show', ['product' => $product])
+            ->with('success', 'Product updated successfully!');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
 
-        return redirect('/products');
+        return redirect()->route('products.index')
+            ->with('success', 'Product deleted successfully!');
     }
 }

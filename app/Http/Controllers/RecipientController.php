@@ -10,6 +10,7 @@ use App\Services\RecipientService;
 
 class RecipientController
 {
+    public function __construct(protected RecipientService $recipientService) {}
     public function index()
     {
         $recipients = Recipient::all();
@@ -33,24 +34,27 @@ class RecipientController
         return view('recipients.create');
     }
 
-    public function store(StoreRecipientRequest $request, RecipientService $recipientService)
+    public function store(StoreRecipientRequest $request)
     {
-        $recipient = $recipientService->storeRecipient($request->validated());
+        $recipient = $this->recipientService->storeRecipient($request->validated());
 
-        return view('recipients.show', ['recipient' => $recipient]);
+        return redirect()->route('recipients.show', ['recipient' => $recipient])
+            ->with('success', 'Recipient created successfully!');
     }
 
-    public function update(UpdateRecipientRequest $request, RecipientService $recipientService, Recipient $recipient)
+    public function update(UpdateRecipientRequest $request, Recipient $recipient)
     {
-        $recipient = $recipientService->updateRecipient($recipient, $request->validated());
+        $recipient = $this->recipientService->updateRecipient($recipient, $request->validated());
 
-        return view('recipients.show', ['recipient' => $recipient]);
+        return redirect()->route('recipients.show', ['recipient' => $recipient])
+            ->with('success', 'Recipient updated successfully!');
     }
 
     public function destroy(Recipient $recipient)
     {
         $recipient->delete();
 
-        return redirect('/recipients');
+        return redirect()->route('recipients.index')
+            ->with('success', 'Recipient deleted successfully!');
     }
 }

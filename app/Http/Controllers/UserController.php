@@ -2,13 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
+use App\Services\UserService;
 
 class UserController
 {
+
+    public function __construct(protected UserService $userService ) {}
+
     public function index()
     {
-        $users = User::all();
+        $query = $this->userService->getUsers();
+        $query = $this->userService->whereRole($query, request()->input('role'));
+
+        $users = $query->orderBy($this->userService->orderBy(), $this->userService->direction())
+            ->paginate($this->userService->perPage());
+//        dd($users);
 
         return view('users.index', ['users' => $users]);
     }
@@ -27,35 +37,12 @@ class UserController
         return view('users.edit', ['user' => $user]);
     }
 
-    public function update(User $user)
+    public function update(User $user, ProfileUpdateRequest $request)
     {
-        request()->validate([
-            'name' => ['required', 'min:3'],
-            'phone' => ['required', 'min:9'],
-            'street' => ['required', 'min:3'],
-            'street_number' => ['required', 'numeric'],
-            'city' => ['required', 'min:3'],
-            'postcode' => ['required', 'min:4'],
-            'country' => ['required', 'min:3'],
-            'role' => ['required'],
-            'is_active' => ['boolean'],
-        ]);
+        $user = $this->userService->updateUser($user, $request->validated());
 
-        $user->update([
-            'name' => request('name'),
-            'phone' => request('phone'),
-            'address_data' => [
-                'street' => request('street'),
-                'street_number' => request('street_number'),
-                'city' => request('city'),
-                'postcode' => request('postcode'),
-                'country' => request('country')
-            ],
-            'role' => request('role'),
-            'is_active' => request('is_active')
-        ]);
-
-        return redirect("/users/{$user->id}");
+        return redirect()->route('users.show', ['user' => $user])
+            ->with('success', 'User updated successfully!');
     }
 
     public function destroy(User $user)

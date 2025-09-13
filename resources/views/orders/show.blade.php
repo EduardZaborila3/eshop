@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot:heading>
-        Order Details
+        Order Details: #{{ $order->id }}
     </x-slot:heading>
     <div class="max-w-2xl bg-white py-6">
         <p class="mb-2"><strong>Recipient:</strong> {{ $order->recipient->name }}</p>

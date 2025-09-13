@@ -34,8 +34,9 @@
                             @endguest
 
                             @auth
-                                <form method="POST" action="/logout">
+                                <form method="POST" action="/logout" class="space-x-4">
                                     @csrf
+                                    <a href="/users/{{ auth()->user()->id }}/edit" class="text-gray-200 text-sm font-semibold border rounded-lg p-2 border-indigo-400 border-2 hover:bg-indigo-400 duration-300">Edit Profile</a>
                                     <x-form-button>Log Out</x-form-button>
                                 </form>
                             @endauth
@@ -57,17 +58,19 @@
             </div>
         </main>
     </div>
-    <!-- Include this at the bottom of your <body> before </body> -->
     @if(session('success'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 Toastify({
                     text: "{{ session('success') }}",
-                    duration: 4000, // 4 seconds
-                    gravity: "top", // top or bottom
-                    position: "right", // left, center, right
-                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-                    close: true, // adds a close button
+                    duration: 4000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "green",
+                    close: true,
+                    style: {
+                        marginTop: "66px"
+                    }
                 }).showToast();
             });
         </script>
@@ -81,7 +84,7 @@
                     duration: 4000,
                     gravity: "top",
                     position: "right",
-                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    backgroundColor: "red",
                     close: true,
                 }).showToast();
             });
