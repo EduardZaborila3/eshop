@@ -83,7 +83,7 @@ class OrderController
     {
         $order->delete();
 
-        return redirect()->route('orders.destroy')
+        return redirect()->route('orders.index')
             ->with('success', 'Order deleted successfully!');
     }
 }

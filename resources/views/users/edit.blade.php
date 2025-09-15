@@ -153,7 +153,7 @@
                         </div>
                     </div>
 
-                    @if(auth()->user()->role === 'admin' && auth()->user()->id != $user->id)
+                    @if(auth()->user()->role === 'admin')
                         <div class="sm:col-span-4">
                             <label class="block text-sm/6 font-medium text-gray-500">Role</label>
                             <div class="mt-2 flex gap-4">
@@ -175,6 +175,8 @@
                             <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
                             @enderror
                         </div>
+                    @else
+                        <input type="hidden" name="role" value="{{ $user->role }}">
                     @endif
 
                     <div class="sm:col-span-4">

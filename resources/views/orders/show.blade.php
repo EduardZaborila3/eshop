@@ -3,8 +3,8 @@
         Order Details: #{{ $order->id }}
     </x-slot:heading>
     <div class="max-w-2xl bg-white py-6">
-        <p class="mb-2"><strong>Recipient:</strong> {{ $order->recipient->name }}</p>
-        <p class="mb-2"><strong>Company:</strong> {{ $order->company->name }}</p>
+        <p class="mb-2"><strong>Recipient:</strong> {{ data_get($order, 'recipient.name', '-') }}</p>
+        <p class="mb-2"><strong>Company:</strong> {{ data_get($order, 'company.name', '-') }}</p>
         <p class="mb-2"><strong>Products:</strong>
             @foreach($order->products as $product)
                 <span class="inline-block bg-gray-200 text-gray-800 text-sm px-2 py-1 rounded-full mr-2 mb-2">

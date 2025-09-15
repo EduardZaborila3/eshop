@@ -55,7 +55,7 @@ class CompanyController
     {
         $company->delete();
 
-        return redirect()->route('companies.destroy')
+        return redirect()->route('companies.index')
             ->with('success', 'Company deleted successfully!');
     }
 }

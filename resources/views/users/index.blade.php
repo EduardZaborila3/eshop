@@ -5,20 +5,6 @@
 
     <form method="GET" class="mb-6 flex gap-4 items-end">
         <div class="flex items-center justify-between space-x-6">
-            <div class="sm:col-span-4">
-                <label for="name" class="block text-sm/6 font-medium text-gray-500"></label>
-                <div class="mt-2">
-                    <div class="flex items-center rounded-md bg-white/5 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-500">
-                        <input id="name"
-                               type="text"
-                               name="name"
-                               value=""
-                               placeholder="Search"
-                               class="rounded-md border border-gray-400 block min-w-0 grow bg-transparent py-1.5 px-3 text-base text-gray-900 placeholder:text-gray-500 focus:outline-none sm:text-sm/6"
-                        />
-                    </div>
-                </div>
-            </div>
             <div>
                 <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
                 <select name="role" id="role" class="mt-1 px-2 block rounded-md border-gray-300 shadow-sm">
@@ -40,7 +26,6 @@
             <div>
                 <label for="order_by" class="block text-sm font-medium text-gray-700">Order By</label>
                 <select name="order_by" id="order_by" class="mt-1 block rounded-md border-gray-300 shadow-sm">
-                    <option value="name" {{ request('order_by') == 'name' ? 'selected' : '' }}>Name</option>
                     <option value="email" {{ request('order_by') == 'email' ? 'selected' : '' }}>Email</option>
                     <option value="created_at" {{ request('order_by') == 'created_at' ? 'selected' : '' }}>Register Date</option>
                 </select>

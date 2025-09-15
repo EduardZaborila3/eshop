@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->datetime('status_synced_at')->nullable();
             $table->datetime('deleted_at')->nullable()->default(null);
             $table->timestamp('placed_at');
-            $table->timestamp('updated_at');
+            $table->timestamp('updated_at')->nullable()->default(now());
 
         });
     }

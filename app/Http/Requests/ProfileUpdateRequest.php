@@ -23,14 +23,6 @@ class ProfileUpdateRequest extends FormRequest
         $userId = request('user');
         return [
             'name' => ['required', 'string', 'max:255', 'min:3'],
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($userId),
-            ],
             'phone' => ['required', 'string', 'max:20', 'min:9'],
             'street' => ['required', 'string', 'max:255', 'min:3'],
             'street_number' => ['required', 'string', 'max:10'],

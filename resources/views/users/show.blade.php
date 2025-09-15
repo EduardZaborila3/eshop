@@ -11,7 +11,7 @@
             <h1>{{ $user->email }}</h1>
             <h1>{{ $user->phone }}</h1>
         </div>
-        <p><strong>Role:</strong> {{ $user->role }}</p>
+        <p><strong>Role:</strong> {{ ucfirst($user->role) }}</p>
         <p><strong>Joined At:</strong> {{ $user->created_at->format('F j, Y') }}</p>
         <p><strong>Address:</strong> {{ data_get($user, 'address_data.country') }}, {{ data_get($user, 'address_data.city') }}, {{ data_get($user, 'address_data.street') }}, {{ data_get($user, 'address_data.street_number') }}</p>
         <p><strong>Postal Code:</strong> {{ data_get($user, 'address_data.postcode') }}</p>

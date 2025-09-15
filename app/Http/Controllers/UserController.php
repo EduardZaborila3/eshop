@@ -15,10 +15,10 @@ class UserController
     {
         $query = $this->userService->getUsers();
         $query = $this->userService->whereRole($query, request()->input('role'));
+        $query = $this->userService->whereActive($query, request()->input('is_active'));
 
-        $users = $query->orderBy($this->userService->orderBy(), $this->userService->direction())
-            ->paginate($this->userService->perPage());
-//        dd($users);
+        $users = $this->userService->applyOrdering($query)
+            ->simplePaginate($this->userService->perPage());
 
         return view('users.index', ['users' => $users]);
     }

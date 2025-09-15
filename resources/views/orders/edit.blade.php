@@ -10,8 +10,8 @@
             <div class="border-b border-white/10 pb-12">
                 <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                     <div class="sm:col-span-6">
-                        <p class="mb-2"><strong>Recipient:</strong> {{ $order->recipient->name }}</p>
-                        <p class="mb-6"><strong>Company:</strong> {{ $order->company->name }}</p>
+                        <p class="mb-2"><strong>Recipient:</strong> {{ data_get($order, 'recipient.name') }}</p>
+                        <p class="mb-6"><strong>Company:</strong> {{ data_get($order, 'company.name') }}</p>
                         <label for="products" class="block text-sm font-medium text-gray-700 mb-2">Products</label>
                         <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-sm">
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -60,6 +60,8 @@
                             <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
                             @enderror
                         </div>
+                    @else
+                        <input type="hidden" name="status" value="{{ $order->status }}">
                     @endif
 
 

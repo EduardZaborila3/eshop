@@ -40,8 +40,8 @@ Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.
 
 // company routes
 Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index')->middleware('auth');
-Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show')->middleware('auth');
 Route::get('/companies/create', [CompanyController::class, 'create'])->name('companies.create')->middleware('auth');
+Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show')->middleware('auth');
 Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store')->middleware('auth');
 Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])->name('companies.edit')->middleware('auth');
 Route::patch('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update')->middleware('auth');
@@ -68,8 +68,8 @@ Route::delete('/recipients/{recipient}', [RecipientController::class, 'destroy']
 // orders routes
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')->middleware('auth');
 Route::get('/companies/{company}/orders/create', [OrderController::class, 'create'])->name('orders.create')->middleware('auth');
-Route::post('/companies/{company}/orders', [OrderController::class, 'store'])->name('orders.store')->middleware('auth');
 Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show')->middleware('auth');
+Route::post('/companies/{company}/orders', [OrderController::class, 'store'])->name('orders.store')->middleware('auth');
 Route::get('/orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware('auth');
 Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('orders.update')->middleware('auth');
 Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware('auth');

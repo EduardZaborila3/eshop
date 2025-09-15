@@ -3,14 +3,11 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    public function direction()
-    {
-        return request()->input('direction', 'asc');
-    }
     public function getUsers()
     {
         return User::where('id', '!=', auth()->id());
@@ -22,13 +19,42 @@ class UserService
 
     public function orderBy()
     {
-        return request()->input('order_by', 'name');
+        $allowed = ['name', 'email', 'created_at'];
+        $col = request()->input('order_by', 'name');
+        return in_array($col, $allowed, true) ? $col : 'name';
     }
+
+    public function direction()
+    {
+        $dir = strtolower(request()->input('direction', 'asc'));
+        return $dir === 'desc' ? 'desc' : 'asc';
+    }
+
+    public function applyOrdering($query)
+    {
+        $column = $this->orderBy();
+        $dir = $this->direction();
+
+        if ($column === 'name') {
+            return $query->orderByRaw("name COLLATE utf8mb4_unicode_ci {$dir}");
+        }
+
+        return $query->orderBy($column, $dir);
+    }
+
 
     public function whereRole($query, $role)
     {
         if ($role) {
             $query->where('role', $role);
+        }
+        return $query;
+    }
+
+    public function whereActive($query, $isActive)
+    {
+        if ($isActive != null && $isActive != '') {
+            $query->where('is_active', $isActive);
         }
         return $query;
     }
@@ -66,7 +92,6 @@ class UserService
 
          $user->update([
             'name' => $data['name'],
-            'email' => $data['email'],
             'phone' => $data['phone'],
             'address_data' => $address,
             'role' => $data['role'],
