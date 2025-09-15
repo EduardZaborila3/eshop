@@ -15,7 +15,7 @@
             </div>
 
             <div>
-                <label for="is_active" class="block text-sm font-medium text-gray-700">Status</label>
+                <label for="is_active" class="block text-sm font-medium text-gray-700">Is Active</label>
                 <select name="is_active" id="is_active" class="mt-1 block rounded-md border-gray-300 shadow-sm">
                     <option value="">All</option>
                     <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
@@ -54,8 +54,9 @@
                 </div>
             </div>
 
-            <div>
+            <div class="space-x-4">
                 <button type="submit" class="text-sm font-semibold mt-2 rounded-md bg-indigo-400 px-4 py-2 text-white shadow-sm">Filter</button>
+                <a href="{{ url()->current() }}" class="text-indigo-500 border border-indigo-500 rounded-lg p-2">Reset Filters</a>
             </div>
         </div>
     </form>

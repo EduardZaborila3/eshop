@@ -6,7 +6,7 @@
     <x-slot:actions>
         <x-action-button href="/companies/create">Add Company</x-action-button>
     </x-slot:actions>
-    <div class="space-y-4">
+    <form method="GET" class="mb-6 flex gap-4 items-end">
         <div class="flex items-center justify-between space-x-6">
             <div class="sm:col-span-4">
                 <label for="name" class="block text-sm/6 font-medium text-gray-500"></label>
@@ -15,24 +15,16 @@
                         <input id="name"
                                type="text"
                                name="name"
-                               value=""
+                               value="{{ request()->name }}"
                                placeholder="Search"
                                class="rounded-md border border-gray-400 block min-w-0 grow bg-transparent py-1.5 px-3 text-base text-gray-900 placeholder:text-gray-500 focus:outline-none sm:text-sm/6"
                         />
                     </div>
                 </div>
             </div>
-            <div>
-                <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
-                <select name="role" id="role" class="mt-1 px-2 block rounded-md border-gray-300 shadow-sm">
-                    <option value="">All</option>
-                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                    <option value="staff" {{ request('role') == 'staff' ? 'selected' : '' }}>Staff</option>
-                </select>
-            </div>
 
             <div>
-                <label for="is_active" class="block text-sm font-medium text-gray-700">Status</label>
+                <label for="is_active" class="block text-sm font-medium text-gray-700">Is Active</label>
                 <select name="is_active" id="is_active" class="mt-1 block rounded-md border-gray-300 shadow-sm">
                     <option value="">All</option>
                     <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
@@ -72,11 +64,13 @@
                 </div>
             </div>
 
-            <div>
+            <div class="space-x-4">
                 <button type="submit" class="text-sm font-semibold mt-2 rounded-md bg-indigo-400 px-4 py-2 text-white shadow-sm">Filter</button>
+                <a href="{{ url()->current() }}" class="text-indigo-500 border border-indigo-500 rounded-lg p-2">Reset Filters</a>
             </div>
         </div>
-
+    </form>
+    <div class="space-y-4 mb-6">
         @foreach($companies as $company)
             <div class="flex items-center justify-between px-4 py-6 border border-gray-300 rounded-lg hover:shadow-lg transition duration-300">
                 @if(auth()->user()->role === 'admin')
@@ -103,7 +97,6 @@
                 </a>
             </div>
         @endforeach
-
-    {{ $companies->links() }}
     </div>
+    {{ $companies->withQueryString()->links() }}
 </x-app-layout>

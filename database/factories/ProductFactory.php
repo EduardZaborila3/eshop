@@ -13,7 +13,7 @@ class ProductFactory extends Factory
             'name' => fake()->word(),
             'sku' => fake()->unique()->bothify('ID-####'),
             'price' => fake()->randomFloat(2, 1, 1000),
-            'currency' => fake()->randomElement(['USD', 'EUR', 'GBP', 'RON']),
+            'currency' => fake()->randomElement(['USD', 'EUR', 'RON']),
             'stock' => fake()->numberBetween(0, 100),
             'is_active' => fake()->boolean(70),
             'deleted_at' => null

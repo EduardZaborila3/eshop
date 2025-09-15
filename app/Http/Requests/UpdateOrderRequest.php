@@ -24,6 +24,7 @@ class UpdateOrderRequest extends FormRequest
         return [
             'product_ids' => ['required', 'array', 'min:1'],
             'product_ids.*' => ['exists:products,id'],
+            'quantity_per_product' => ['required', 'integer', 'min:1'],
             'status' => ['required'],
             'updated_at' => ['required', 'date'],
         ];

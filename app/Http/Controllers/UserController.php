@@ -39,16 +39,25 @@ class UserController
 
     public function update(User $user, ProfileUpdateRequest $request)
     {
-        $user = $this->userService->updateUser($user, $request->validated());
+        try {
+            $user = $this->userService->updateUser($user, $request->validated());
 
-        return redirect()->route('users.show', ['user' => $user])
-            ->with('success', 'User updated successfully!');
+            return redirect()->route('users.show', ['user' => $user])
+                ->with('success', 'User updated successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function destroy(User $user)
     {
-        $user->delete();
+        try {
+            $user->delete();
 
-        return redirect('/users');
+            return redirect()->route('users.index')
+                ->with('success', 'Recipient deleted successfully!');;
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }

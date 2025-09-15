@@ -30,11 +30,18 @@
                     <x-form-field>
                         <x-form-label for="currency">Currency</x-form-label>
                         <div class="mt-2">
-                            <x-form-input id="currency"  name="currency" value="{{ old('stock', $product->currency ?? '') }}" placeholder="EUR" />
+                            <select id="currency" name="currency" class="w-full rounded border-gray-300 shadow-sm p-2">
+                                @foreach(\App\Models\Product::CURRENCIES as $currency)
+                                    <option value="{{ $currency }}" {{ old('currency', $product->currency ?? '') == $currency ? 'selected' : '' }}>
+                                        {{ $currency }}
+                                    </option>
+                                @endforeach
+                            </select>
 
                             <x-form-error name="currency" />
                         </div>
                     </x-form-field>
+
 
                     <x-form-field>
                         <x-form-label for="stock">Stock</x-form-label>

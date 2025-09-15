@@ -80,12 +80,15 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 Toastify({
-                    text: "{{ session('success') }}",
+                    text: "{{ session('error') }}",
                     duration: 4000,
                     gravity: "top",
                     position: "right",
                     backgroundColor: "red",
                     close: true,
+                    style: {
+                        marginTop: "66px"
+                    }
                 }).showToast();
             });
         </script>

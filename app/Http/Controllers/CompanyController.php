@@ -13,11 +13,15 @@ class CompanyController
     public function __construct(protected CompanyService $companyService) {}
 
     public function index() {
-        $companies = Company::orderBy("name", "asc")->paginate(3);
+        $query = $this->companyService->getCompanies();
+        $query = $this->companyService->whereActive($query, request()->input('is_active'));
 
-        return view('companies.index', [
-            'companies' => $companies
-        ]);
+        $companies = $this->companyService->search($query);
+
+        $companies = $this->companyService->applyOrdering($query)
+            ->simplePaginate($this->companyService->perPage());
+
+        return view('companies.index', ['companies' => $companies]);
     }
 
     public function show(Company $company)
@@ -31,12 +35,16 @@ class CompanyController
     }
 
     public function store(StoreCompanyRequest $request) {
-        $company = $this->companyService->storeCompany($request->validated());
+        try {
+            $company = $this->companyService->storeCompany($request->validated());
 
 //        Mail::to($job->employer->user)->queue(new JobPosted($job));
 
-        return redirect()->route('companies.show', $company)
-            ->with('success', 'Company created successfully!');
+            return redirect()->route('companies.show', $company)
+                ->with('success', 'Company created successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function edit(Company $company)
@@ -45,17 +53,25 @@ class CompanyController
     }
 
     public function update(UpdateCompanyRequest $request, Company $company) {
-        $company = $this->companyService->updateCompany($company, $request->validated());
+        try {
+            $company = $this->companyService->updateCompany($company, $request->validated());
 
-        return redirect()->route('companies.show', ['company' => $company])
-            ->with('success', 'Company updated successfully!');
+            return redirect()->route('companies.show', ['company' => $company])
+                ->with('success', 'Company updated successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function destroy(Company $company)
     {
-        $company->delete();
+        try {
+            $company->delete();
 
-        return redirect()->route('companies.index')
-            ->with('success', 'Company deleted successfully!');
+            return redirect()->route('companies.index')
+                ->with('success', 'Company deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }

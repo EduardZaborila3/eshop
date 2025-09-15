@@ -26,6 +26,7 @@ class StoreOrderRequest extends FormRequest
             'recipient_id' => ['required', 'exists:recipients,id'],
             'product_ids' => ['required', 'array', 'min:1'],
             'product_ids.*' => ['exists:products,id'],
+            'quantity_per_product' => ['required', 'integer', 'min:1'],
             'status' => ['required', 'in:draft,created'],
             'placed_at' => ['required', 'date'],
         ];

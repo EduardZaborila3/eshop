@@ -11,12 +11,13 @@ return new class extends Migration {
         Schema::create('recipients', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->nullable();
+            $table->string('email')->nullable()->index();
             $table->string('phone');
             $table->json('address_data')->nullable();
             $table->text('notes')->nullable();
             $table->datetime('deleted_at')->nullable()->default(null);
             $table->timestamps();
+            $table->index('created_at');
         });
     }
 

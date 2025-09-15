@@ -13,6 +13,8 @@ class Product extends Model
 {
     use HasFactory, Notifiable, softDeletes;
 
+    public const CURRENCIES = ['EUR', 'USD', 'RON'];
+
     protected $guarded = [];
 
     public function company(): belongsTo

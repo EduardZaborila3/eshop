@@ -19,7 +19,7 @@ class UserService
 
     public function orderBy()
     {
-        $allowed = ['name', 'email', 'created_at'];
+        $allowed = ['email', 'created_at'];
         $col = request()->input('order_by', 'name');
         return in_array($col, $allowed, true) ? $col : 'name';
     }
@@ -36,7 +36,7 @@ class UserService
         $dir = $this->direction();
 
         if ($column === 'name') {
-            return $query->orderByRaw("name COLLATE utf8mb4_unicode_ci {$dir}");
+            return $query->orderByRaw("name {$dir}");
         }
 
         return $query->orderBy($column, $dir);

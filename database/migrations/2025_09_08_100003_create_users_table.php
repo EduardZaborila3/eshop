@@ -15,16 +15,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->index();
             $table->string('password');
             $table->string('phone');
             $table->json('address_data')->nullable();
-            $table->string('role');
-            $table->boolean('is_active');
+            $table->string('role')->index();
+            $table->boolean('is_active')->index();
             $table->datetime('deleted_at')->nullable()->default(null);
             $table->timestamps();
             $table->rememberToken();
-            $table->index('email');
+            $table->index('created_at');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

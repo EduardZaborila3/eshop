@@ -27,6 +27,9 @@
                                 </option>
                             @endforeach
                         </select>
+                        @error('recipient_id')
+                        <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Select Products with Checkboxes --}}
@@ -39,17 +42,19 @@
                                 @foreach($products->chunk(10) as $chunk)
                                     <div class="space-y-2">
                                         @foreach($chunk as $product)
-                                            <label class="flex items-center space-x-3">
-                                                <input type="checkbox"
-                                                       name="product_ids[]"
-                                                       value="{{ $product->id }}"
-                                                       class="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                                    {{ (collect(old('product_ids'))->contains($product->id)) ? 'checked' : '' }}>
-                                                <span class="text-sm text-gray-700">
+                                            @if($product->is_active)
+                                                <label class="flex items-center space-x-3">
+                                                    <input type="checkbox"
+                                                           name="product_ids[]"
+                                                           value="{{ $product->id }}"
+                                                           class="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                        {{ (collect(old('product_ids'))->contains($product->id)) ? 'checked' : '' }}>
+                                                    <span class="text-sm text-gray-700">
                                 {{ $product->name }} –
-                                <span class="font-semibold">{{ $product->price }} {{ $product->currency }}</span>
+                                <span class="font-semibold">{{ $product->price }} {{ $product->currency }} - Stock: {{ $product->stock }}</span>
                             </span>
-                                            </label>
+                                                </label>
+                                            @endif
                                         @endforeach
                                     </div>
                                 @endforeach
@@ -57,7 +62,18 @@
                         </div>
                     </div>
 
-{{--                    Select status--}}
+                    <div class="sm:col-span-4 space-y-4">
+                        <label for="quantity_per_product" class="block text-sm/6 font-medium text-gray-500">Select Quantity per Product</label>
+                        <input type="number"
+                               name="quantity_per_product"
+                               value="{{ old('quantity_per_product', 0) }}"
+                               min="0"
+                               class="w-15 border rounded px-2 py-1 text-sm text-gray-700">
+                        @error('quantity_per_product')
+                        <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <div class="sm:col-span-4">
                         <label class="block text-sm/6 font-medium text-gray-500">Select Status</label>
                         <div class="mt-2 flex gap-4">
@@ -86,7 +102,7 @@
 
         {{-- Buttons --}}
         <div class="mt-6 flex items-center justify-end gap-x-6">
-            <a href="/orders"
+            <a href="/companies"
                class="rounded-lg bg-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-400 transition">
                 Cancel
             </a>

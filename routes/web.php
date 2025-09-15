@@ -1,7 +1,13 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Mail\OrderCreated;
 use Illuminate\Support\Facades\Route;
+
+Route::get('test', function() {
+   Mail::to('user@ehop.com')->send(new OrderCreated());
+   return 'Done';
+});
 
 Route::get('/', function () {
     return view('welcome');

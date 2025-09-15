@@ -38,6 +38,15 @@
                         @enderror
                     </div>
 
+                    <div class="sm:col-span-4 space-y-4">
+                        <label for="quantity_per_product" class="block text-sm/6 font-medium text-gray-500">Select Quantity per Product</label>
+                        <input type="number"
+                               name="quantity_per_product"
+                               value="{{ $order['quantity_per_product'] ?? '0' }}"
+                               min="0"
+                               class="w-15 border rounded px-2 py-1 text-sm text-gray-700">
+                    </div>
+
                     @if($order->status == 'draft' || $order->status == 'created')
                         <div class="sm:col-span-4">
                             <label class="block text-sm/6 font-medium text-gray-500">Status</label>
