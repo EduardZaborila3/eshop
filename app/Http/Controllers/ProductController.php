@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Company;
 use App\Models\Product;
 use App\Services\ProductService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProductController
 {
@@ -21,6 +23,10 @@ class ProductController
 
         $products = $this->productService->applyOrdering($query)
             ->simplePaginate($this->productService->perPage());
+
+        $id = Auth::id();
+        $ip = request()->ip();
+        Log::info("User with ID {$id} accessed the products index page. IP: {$ip}");
 
         return view('products.index', [
             'products' => $products,
@@ -44,7 +50,10 @@ class ProductController
         try {
             $product = $this->productService->storeProduct($request->validated());
 
-//        Mail::to($job->employer->user)->queue(new JobPosted($job));
+            $id = Auth::id();
+            $productId = $product->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} added a new product with ID {$productId}. IP: {$ip}");
 
             return redirect()->route('products.show', ['product' => $product])
                 ->with('success', 'Product created successfully!');
@@ -62,6 +71,11 @@ class ProductController
         try {
             $product = $this->productService->updateProduct($product, $request->validated());
 
+            $id = Auth::id();
+            $productId = $product->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} updated product with ID {$productId}. IP: {$ip}");
+
             return redirect()->route('products.show', ['product' => $product])
                 ->with('success', 'Product updated successfully!');
         } catch(\Exception $e) {
@@ -72,7 +86,15 @@ class ProductController
     public function destroy(Product $product)
     {
         try {
+            if ($product->orders()->count() > 0) {
+                return redirect()->back()->with('error', 'This product cannot be deleted because it is part of an order.');
+            }
             $product->delete();
+
+            $id = Auth::id();
+            $productId = $product->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} deleted product with ID {$productId}. IP: {$ip}");
 
             return redirect()->route('products.index')
                 ->with('success', 'Product deleted successfully!');

@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -58,6 +59,12 @@ class RegisteredUserController extends Controller
             'role' => $request->role,
             'password' => Hash::make($request->password),
             'is_active' => true,
+        ]);
+
+        Log::info("New user created", [
+            'name' => $user->name,
+            'id' => $user->id,
+            'ip' => request()->ip(),
         ]);
 
         event(new Registered($user));

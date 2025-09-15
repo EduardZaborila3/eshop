@@ -13,15 +13,14 @@
 
                 <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
-                    {{-- Select Recipient --}}
                     <div class="sm:col-span-3">
                         <label for="recipient_id" class="block text-sm font-medium text-gray-700 mb-2">
                             Recipient
                         </label>
                         <select class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
                                 name="recipient_id" id="recipient_id">
-                            <option value="">Select a recipient</option>
-                            @foreach($recipients as $recipient)
+                        <option value="" disabled {{ old('recipient_id') ? '' : 'selected' }}>Select a recipient</option>
+                        @foreach($recipients as $recipient)
                                 <option value="{{ $recipient->id }}" {{ old('recipient_id') == $recipient->id ? 'selected' : '' }}>
                                     {{ $recipient->name }}
                                 </option>
@@ -32,7 +31,6 @@
                         @enderror
                     </div>
 
-                    {{-- Select Products with Checkboxes --}}
                     <div class="sm:col-span-6">
                         <label for="products" class="block text-sm font-medium text-gray-700 mb-3">
                             Products
@@ -42,7 +40,7 @@
                                 @foreach($products->chunk(10) as $chunk)
                                     <div class="space-y-2">
                                         @foreach($chunk as $product)
-                                            @if($product->is_active)
+                                            @if($product->is_active && $product->stock > 0)
                                                 <label class="flex items-center space-x-3">
                                                     <input type="checkbox"
                                                            name="product_ids[]"
@@ -78,18 +76,21 @@
                         <label class="block text-sm/6 font-medium text-gray-500">Select Status</label>
                         <div class="mt-2 flex gap-4">
                             <label class="inline-flex items-center">
-                                <input type="radio" name="status" value="draft"
-                                       class="form-radio text-indigo-600"
-                                    >
+                                <input type="radio"
+                                       name="status"
+                                       value="draft"
+                                    {{ old('status', 'draft') === 'draft' ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-500">Draft</span>
                             </label>
 
                             <label class="inline-flex items-center">
-                                <input type="radio" name="status" value="created"
-                                       class="form-radio text-indigo-600"
-                                    >
+                                <input type="radio"
+                                       name="status"
+                                       value="created"
+                                    {{ old('status') === 'created' ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-500">Created</span>
                             </label>
+
                         </div>
                         @error('is_active')
                         <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>

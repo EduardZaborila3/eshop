@@ -25,7 +25,7 @@
                                                     {{ in_array($product->id, old('product_ids', $orderProductIds)) ? 'checked' : '' }}>
                                                 <span class="text-sm text-gray-700">
                                 {{ $product->name }} –
-                                <span class="font-semibold">{{ $product->price }} {{ $product->currency }}</span>
+                                <span class="font-semibold">{{ $product->price }} {{ $product->currency }} - Stock: {{ $product->stock }}</span>
                             </span>
                                             </label>
                                         @endforeach
@@ -33,6 +33,7 @@
                                 @endforeach
                             </div>
                         </div>
+
                         @error('product_ids')
                         <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
                         @enderror
@@ -47,7 +48,7 @@
                                class="w-15 border rounded px-2 py-1 text-sm text-gray-700">
                     </div>
 
-                    @if($order->status == 'draft' || $order->status == 'created')
+                    @if($order->status == 'draft')
                         <div class="sm:col-span-4">
                             <label class="block text-sm/6 font-medium text-gray-500">Status</label>
                             <div class="mt-2 flex gap-4">

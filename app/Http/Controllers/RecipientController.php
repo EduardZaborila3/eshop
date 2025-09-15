@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateRecipientRequest;
 use App\Models\Recipient;
 use App\Services\CompanyService;
 use App\Services\RecipientService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RecipientController
 {
@@ -21,6 +23,10 @@ class RecipientController
         $recipients = $this->recipientService->applyOrdering($query)
             ->simplePaginate($this->recipientService->perPage());
 
+        $id = Auth::id();
+        $ip = request()->ip();
+        Log::info("User with ID {$id} accessed the recipients index page. IP: {$ip}");
+
         return view('recipients.index', ['recipients' => $recipients]);
     }
 
@@ -31,7 +37,6 @@ class RecipientController
 
     public function edit(Recipient $recipient)
     {
-        // dd($recipient);
         return view('recipients.edit', ['recipient' => $recipient]);
     }
 
@@ -45,6 +50,11 @@ class RecipientController
         try {
             $recipient = $this->recipientService->storeRecipient($request->validated());
 
+            $id = Auth::id();
+            $recipientId = $recipient->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} added a new recipient with ID {$recipientId}. IP: {$ip}");
+
             return redirect()->route('recipients.show', ['recipient' => $recipient])
                 ->with('success', 'Recipient created successfully!');
         } catch (\Exception $e) {
@@ -57,6 +67,11 @@ class RecipientController
         try {
             $recipient = $this->recipientService->updateRecipient($recipient, $request->validated());
 
+            $id = Auth::id();
+            $recipientId = $recipient->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} updated recipient with ID {$recipientId}. IP: {$ip}");
+
             return redirect()->route('recipients.show', ['recipient' => $recipient])
                 ->with('success', 'Recipient updated successfully!');
         } catch (\Exception $e) {
@@ -68,6 +83,11 @@ class RecipientController
     {
         try {
             $recipient->delete();
+
+            $id = Auth::id();
+            $recipientId = $recipient->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} deleted recipient with ID {$recipientId}. IP: {$ip}");
 
             return redirect()->route('recipients.index')
                 ->with('success', 'Recipient deleted successfully!');

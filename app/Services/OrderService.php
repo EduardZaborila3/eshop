@@ -28,6 +28,16 @@ class OrderService
         return $query;
     }
 
+    public function totalItems(int $quantityPerProduct, array $productIds): int
+    {
+        return $quantityPerProduct * count($productIds);
+    }
+
+    public function totalAmount(array $data)
+    {
+
+    }
+
     // In OrderService.php
     public function checkStock(array $productIds, int $quantityPerProduct): bool|string
     {
@@ -88,9 +98,10 @@ class OrderService
     {
         return Recipient::findOrFail($recipient)->name;
     }
-    public function getTotalAmount(array $productIds)
+    public function getTotalAmount(array $productIds, int $quantityPerProduct)
     {
-        return Product::whereIn('id', $productIds)->sum('price');
+        $total =  Product::whereIn('id', $productIds)->sum('price');
+        return $total * $quantityPerProduct;
     }
 
     public function getTotalItems(array $productIds)

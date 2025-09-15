@@ -6,6 +6,8 @@ use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
 use App\Services\CompanyService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class CompanyController
@@ -20,6 +22,10 @@ class CompanyController
 
         $companies = $this->companyService->applyOrdering($query)
             ->simplePaginate($this->companyService->perPage());
+
+        $id = Auth::id();
+        $ip = request()->ip();
+        Log::info("User with ID {$id} accessed the companies index page . IP: {$ip}");
 
         return view('companies.index', ['companies' => $companies]);
     }
@@ -38,7 +44,10 @@ class CompanyController
         try {
             $company = $this->companyService->storeCompany($request->validated());
 
-//        Mail::to($job->employer->user)->queue(new JobPosted($job));
+            $id = Auth::id();
+            $companyId = $company->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} created a new company with ID {$companyId}. IP: {$ip}");
 
             return redirect()->route('companies.show', $company)
                 ->with('success', 'Company created successfully!');
@@ -56,6 +65,11 @@ class CompanyController
         try {
             $company = $this->companyService->updateCompany($company, $request->validated());
 
+            $id = Auth::id();
+            $companyId = $company->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} updated company with ID {$companyId}. IP: {$ip}");
+
             return redirect()->route('companies.show', ['company' => $company])
                 ->with('success', 'Company updated successfully!');
         } catch (\Exception $e) {
@@ -67,6 +81,11 @@ class CompanyController
     {
         try {
             $company->delete();
+
+            $id = Auth::id();
+            $companyId = $company->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} deleted company with ID {$companyId}. IP: {$ip}");
 
             return redirect()->route('companies.index')
                 ->with('success', 'Company deleted successfully!');

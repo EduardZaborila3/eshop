@@ -9,6 +9,8 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Recipient;
 use App\Services\OrderService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class OrderController
@@ -25,6 +27,10 @@ class OrderController
         $orders = $this->orderService->applyOrdering($query)
             ->simplePaginate($this->orderService->perPage());
 
+        $id = Auth::id();
+        $ip = request()->ip();
+        Log::info("User with ID {$id} accessed the orders index page. IP: {$ip}");
+
         return view('orders.index', ['orders' => $orders]);
     }
 
@@ -36,6 +42,7 @@ class OrderController
     public function create($company, OrderService $orderService)
     {
         $products = $orderService->getProducts($company);
+
         return view('orders.create', [
             'recipients' => Recipient::all(),
             'products' => $products,
@@ -46,9 +53,8 @@ class OrderController
     {
         try {
             $data = $request->validated();
-
             $productIds = $data['product_ids'];
-            $quantityPerProduct = (int) $data['quantity_per_product'];
+            $quantityPerProduct = $data['quantity_per_product'];
 
             $stockCheck = $this->orderService->checkStock($productIds, $quantityPerProduct);
 
@@ -56,8 +62,14 @@ class OrderController
                throw new \Exception('Insufficient stock');
             }
 
-            $data['total_items'] = $quantityPerProduct * count($productIds);
-            $data['total_amount'] = $this->orderService->getTotalAmount($productIds) * $quantityPerProduct;
+            $data['total_items'] = $this->orderService->totalItems(
+                $data['quantity_per_product'],
+                $data['product_ids']
+            );
+            $data['total_amount'] = $this->orderService->getTotalAmount(
+                $productIds,
+                $quantityPerProduct
+            );
             $data['currency'] = $this->orderService->getCurrency($productIds);
 
             $data['quantity_per_product'] = $quantityPerProduct;
@@ -68,13 +80,19 @@ class OrderController
             if ($data['status'] === 'created') {
                 foreach ($productIds as $productId) {
                     $product = Product::find($productId);
-                    $product->decrement('stock', $quantityPerProduct);
+                    $product->stock -= $quantityPerProduct;
+                    $product->save();
                 }
             }
 
             $order->load('recipient', 'products', 'company');
 
             Mail::to($order->recipient->email)->queue(new OrderCreated($order));
+
+            $id = Auth::id();
+            $orderId = $order->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} created order with ID {$orderId}. IP: {$ip}");
 
             return redirect()->route('orders.show', ['order' => $order])
                 ->with('success', 'Order created successfully!');
@@ -100,13 +118,25 @@ class OrderController
         try {
             $data = $request->validated();
 
-            $data['total_items']  = $this->orderService->getTotalItems($data['product_ids']);
-            $data['total_amount'] = $this->orderService->getTotalAmount($data['product_ids']);
-            $data['currency'] = $this->orderService->getCurrency($data['product_ids']);
+            $productIds = $data['product_ids'];
+            $quantityPerProduct = $data['quantity_per_product'];
+
+            $data['total_items']  = $this->orderService->getTotalItems($productIds);
+            $data['total_amount'] = $this->orderService->getTotalAmount(
+                $productIds,
+                $quantityPerProduct
+            );
+            $data['currency'] = $this->orderService->getCurrency($productIds);
+            $oldStatus = $order['status'];
 
             $updatedOrder = $this->orderService->updateOrder($order, $data);
 
             $updatedOrder->products()->sync($data['product_ids']);
+
+            if (isset($data['status']) && $data['status'] !== $oldStatus) {
+                $userId = Auth::id();
+                Log::info("User with ID {$userId} changed order with ID {$updatedOrder->id} status from '{$oldStatus}' to '{$data['status']}'");
+            }
 
             return redirect()->route('orders.show', ['order' => $updatedOrder])
                 ->with('success', 'Order updated successfully!');
@@ -119,6 +149,9 @@ class OrderController
     {
         try {
             $order->delete();
+
+            $userId = Auth::id();
+            Log::info("User with ID {$userId} deleted order with ID {$order->id}. IP: {request()->ip()}");
 
             return redirect()->route('orders.index')
                 ->with('success', 'Order deleted successfully!');

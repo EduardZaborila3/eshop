@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UserController
 {
@@ -19,6 +21,10 @@ class UserController
 
         $users = $this->userService->applyOrdering($query)
             ->simplePaginate($this->userService->perPage());
+
+        $id = Auth::id();
+        $ip = request()->ip();
+        Log::info("User with ID {$id} accessed the users index page. IP: {$ip}");
 
         return view('users.index', ['users' => $users]);
     }
@@ -42,6 +48,11 @@ class UserController
         try {
             $user = $this->userService->updateUser($user, $request->validated());
 
+            $id = Auth::id();
+            $id_2 = $user->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} changed profile for user with ID {$id_2}. IP: {$ip}");
+
             return redirect()->route('users.show', ['user' => $user])
                 ->with('success', 'User updated successfully!');
         } catch (\Exception $e) {
@@ -53,6 +64,11 @@ class UserController
     {
         try {
             $user->delete();
+
+            $id = Auth::id();
+            $id_2 = $user->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} deleted user with ID {$id_2}. IP: {$ip}");
 
             return redirect()->route('users.index')
                 ->with('success', 'Recipient deleted successfully!');;

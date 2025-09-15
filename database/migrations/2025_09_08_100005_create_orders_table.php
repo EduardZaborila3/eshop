@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id()->index();
-            $table->foreignIdFor(Company::class)->constrained()->index();
+            $table->foreignIdFor(Company::class)->constrained();
             $table->foreignIdFor(Recipient::class)->constrained();
             $table->foreignIdFor(User::class)->constrained();
             $table->enum('status', ['draft', 'created', 'delivered', 'cancelled'])->index();

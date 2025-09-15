@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Mail\OrderCreated;
+use Illuminate\Mail\Mailables\Content;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('test', function() {
-   Mail::to('user@ehop.com')->send(new OrderCreated());
+   \Illuminate\Support\Facades\Mail::to('edi@eshop.com')->send(new OrderCreated());
    return 'Done';
 });
 
