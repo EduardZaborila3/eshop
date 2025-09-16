@@ -14,6 +14,7 @@
         </p>
         <p class="mb-2"><strong>Total Amount:</strong> {{ $order->total_amount }} {{ $order->currency }}</p>
         <p class="mb-2"><strong>Placed At:</strong> {{ $order->placed_at }}</p>
+        <p class="mb-2"><strong>Quantity per Product:</strong> {{ data_get($order, 'quantity_per_product', '0') }}</p>
         <p class="{{ $order->status == 'cancelled' ? 'text-red-500' :
                     ($order->status == 'delivered' ? 'text-green-600' :
                     ($order->status == 'draft' ? 'text-orange-400' : 'text-blue-400')) }}">
@@ -29,8 +30,11 @@
     </div>
 
     <div class="mt-6 text-blue-400 font-semibold space-x-4">
-        <x-button href="/orders/{{ $order->id }}/edit">Edit Order</x-button>
+        @if($order->status === 'draft')
+            <x-button href="/orders/{{ $order->id }}/edit">Edit Order</x-button>
+        @endif
         <a href="/orders">Go Back</a>
     </div>
+
 </x-app-layout>
 

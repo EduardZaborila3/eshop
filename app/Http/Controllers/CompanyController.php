@@ -58,6 +58,9 @@ class CompanyController
 
     public function edit(Company $company)
     {
+        if (Auth::user()->role != 'admin') {
+            abort(403, "You cannot edit this company.");
+        }
         return view('companies.edit', ['company' => $company]);
     }
 

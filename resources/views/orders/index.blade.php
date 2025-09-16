@@ -82,7 +82,7 @@
                 <p class="mb-1"><strong>Recipient:</strong> {{ data_get($order, 'recipient.name', '-')}}</p>
                 <p class="mb-1"><strong>Company:</strong> {{ data_get($order, 'company.name', '-') }}</p>
                 <p class="mb-1"><strong>Order Date:</strong> {{ data_get($order, 'placed_at') }}</p>
-                <p class="mb-1"><strong>Total Items:</strong> {{ (data_get($order, 'total_items')) }}</p>
+                <p class="mb-1"><strong>Total Items:</strong> {{ (data_get($order, 'quantity_per_product', 0)) * $order->products->count() }}</p>
                 <p class="mb-1"><strong>Total Amount:</strong> ${{ number_format(data_get($order, 'total_amount'), 2) }}</p>
 
             </div>

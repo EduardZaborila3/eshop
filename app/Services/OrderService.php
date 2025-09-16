@@ -14,6 +14,11 @@ class OrderService
         return Order::query();
     }
 
+    public function ordersWithStatus($status)
+    {
+        return Order::where('status', $status)->get();
+    }
+
     public function perPage()
     {
         return request()->input('per_page', 15);
@@ -49,7 +54,7 @@ class OrderService
             }
         }
 
-        return true; // all products have enough stock
+        return true;
     }
 
 
@@ -115,6 +120,13 @@ class OrderService
         return $product ? $product->currency : 'USD';
     }
 
+    public function getApiResponse($apiUrl)
+    {
+        return \Http::withHeaders([
+            'x-api-key' => 'Hungrybytes',
+        ])->get($apiUrl);
+    }
+
     public function storeOrder(array $data)
     {
         return Order::create([
@@ -143,5 +155,15 @@ class OrderService
         ]);
 
         return $order->fresh(); // reload the updated attributes
+    }
+
+    public function updateOrderStatus(Order $order, $status)
+    {
+        $order->update([
+           'status' => $status,
+           'status_synced_at' => now()
+        ]);
+
+        return $order->fresh();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,7 @@ class UserController
         $query = $this->userService->getUsers();
         $query = $this->userService->whereRole($query, request()->input('role'));
         $query = $this->userService->whereActive($query, request()->input('is_active'));
+        $query = $this->userService->search($query);
 
         $users = $this->userService->applyOrdering($query)
             ->simplePaginate($this->userService->perPage());
@@ -35,12 +37,35 @@ class UserController
     }
 
     public function create() {
+        if (Auth::user()->role !== 'admin') {
+            abort(403, "You dont have the permission to create users.");
+        }
         return view('users.create');
     }
 
     public function edit(User $user)
     {
+        if (Auth::user()->role != 'admin' && Auth::user()->id != $user->id) {
+            abort(403, "You cannot edit this user.");
+        }
         return view('users.edit', ['user' => $user]);
+    }
+
+    public function store(StoreUserRequest $request)
+    {
+        try {
+            $user = $this->userService->storeUser($request->validated());
+
+            $id = Auth::id();
+            $userCreatedId = $user->id;
+            $ip = request()->ip();
+            Log::info("User with ID {$id} created a new user with ID {$userCreatedId}. IP: {$ip}");
+
+            return redirect()->route('users.show', ['user' => $user])
+                ->with('success', 'User created successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function update(User $user, ProfileUpdateRequest $request)

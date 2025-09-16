@@ -17,6 +17,15 @@ class UserService
         return request()->input('per_page', 15);
     }
 
+    public function search($query)
+    {
+        if (request()->filled('email')) {
+            return $query->where('email', 'LIKE', '%' . request()->input('email') . '%');
+        }
+
+        return $query;
+    }
+
     public function orderBy()
     {
         $allowed = ['email', 'created_at'];
@@ -59,24 +68,25 @@ class UserService
         return $query;
     }
 
-    public function storeUser(): User
+    public function storeUser(array $data): User
     {
-        $address = request('street') . ' '
-            . request('street_number') . ', '
-            . request('city') . ' '
-            . request('postcode') . ', '
-            . request('country');
+        $address = [
+          'street' => $data['street'],
+          'street_number' => $data['street_number'],
+          'city' => $data['city'],
+          'postcode' => $data['postcode'],
+          'country' => $data['country'],
+        ];
 
         return User::create([
-            'name' => request('name'),
-            'email' => request('email'),
-            'phone' => request('phone'),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
             'address_data' => $address,
-            'role' => request('role'),
-            'password' => Hash::make(request('password')),
-            'is_active' => true,
+            'role' => $data['role'],
+            'password' => Hash::make($data['password']),
+            'is_active' => $data['is_active'] ?? true,
         ]);
-
 
     }
 

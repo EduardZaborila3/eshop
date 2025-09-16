@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use App\Mail\OrderCreated;
+use App\Mail\Mail\OrderCreated;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Recipient;
@@ -103,6 +103,10 @@ class OrderController
 
 
     public function edit(Order $order) {
+        if ($order->status != 'draft') {
+            abort(403, 'You cannot edit this order');
+        }
+
         $companyProducts = $this->orderService->getProducts($order->company_id);
         $orderProductIds = $order->products->pluck('id')->toArray();
 
@@ -120,6 +124,12 @@ class OrderController
 
             $productIds = $data['product_ids'];
             $quantityPerProduct = $data['quantity_per_product'];
+
+            $stockCheck = $this->orderService->checkStock($productIds, $quantityPerProduct);
+
+            if ($stockCheck !== true) {
+                throw new \Exception('Insufficient stock');
+            }
 
             $data['total_items']  = $this->orderService->getTotalItems($productIds);
             $data['total_amount'] = $this->orderService->getTotalAmount(
