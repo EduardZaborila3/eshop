@@ -7,55 +7,82 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# 📦 Project Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The project has been developed to ensure an **easy, safe, and friendly process** between customers and companies.  
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+There are just two types of users:
+- **Admins** → Absolute access across the platform.
+- **Staff Members** → Responsible for manipulating data (products, recipients, and orders).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🛠️ Used Technologies
+- **PHP** v8.4
+- **Laravel** v12.28.1
+- **Node.js** v22.19.0
+- **MySQL** (for database)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🚀 Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone the repository**
+   ```bash
+   git clone 'project-url'
+   cd project-folder
+   ```
 
-## Laravel Sponsors
+2. **Install dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. **Database setup**
+   - Make sure you have **MySQL** installed and configured.
+   - Update the `.env` file with your database credentials.
 
-### Premium Partners
+4. **Generate Laravel application key**
+   This key is used for securely encrypting the data.
+   ```bash
+   php artisan key:generate
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+5. **Migrate and seed the database**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-## Contributing
+   ✅ Factories and seeders are available for:  
+   - Users  
+   - Companies  
+   - Products  
+   - Recipients  
+   - Orders  
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   This will generate useful **mock data** for testing.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📊 Database Relationships
 
-## Security Vulnerabilities
+- **Company → Products**  
+  - Company has many Products  
+  - Product belongs to Company  
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Order ↔ Products**  
+  - Order belongs to many Products  
+  - Product belongs to many Orders  
 
-## License
+- **Recipient → Orders**  
+  - Recipient has many Orders  
+  - Order belongs to Recipient  
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **User → Orders**  
+  - User has many Orders  
+  - Order belongs to User  
+
+- **Company → Orders**  
+  - Company has many Orders  
+  - Order belongs to Company  
