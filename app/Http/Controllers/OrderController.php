@@ -44,7 +44,7 @@ class OrderController
         $products = $orderService->getProducts($company);
 
         return view('orders.create', [
-            'recipients' => Recipient::all(),
+            'recipients' => $orderService->getRecipients(),
             'products' => $products,
             'company' => $company]);
     }

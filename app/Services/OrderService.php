@@ -14,6 +14,11 @@ class OrderService
         return Order::query();
     }
 
+    public function getRecipients()
+    {
+        return Recipient::All();
+    }
+
     public function ordersWithStatus($status)
     {
         return Order::where('status', $status)->get();
@@ -38,12 +43,6 @@ class OrderService
         return $quantityPerProduct * count($productIds);
     }
 
-    public function totalAmount(array $data)
-    {
-
-    }
-
-    // In OrderService.php
     public function checkStock(array $productIds, int $quantityPerProduct): bool|string
     {
         $products = Product::whereIn('id', $productIds)->get();
