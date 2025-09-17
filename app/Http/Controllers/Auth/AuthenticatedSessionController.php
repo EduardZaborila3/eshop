@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +14,8 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
+    public function __construct(protected UserService $userService) {}
+
     /**
      * Display the login view.
      */
@@ -25,15 +29,24 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        try {
+            $user = $this->userService->getUserByEmail($request->email);
+            if ($user->is_active != 1) {
+                throw new \Exception("Login failed. The user you are trying to log in is inactive.");
+            }
 
-        $id = Auth::id();
-        $ip = request()->ip();
-        Log::info("User with ID {$id} logged in. IP: {$ip}");
+            $request->authenticate();
 
-        $request->session()->regenerate();
+            $id = Auth::id();
+            $ip = request()->ip();
+            Log::info("User with ID {$id} logged in. IP: {$ip}");
 
-        return redirect()->intended(route('dashboard', absolute: false));
+            $request->session()->regenerate();
+
+            return redirect()->intended(route('dashboard', absolute: false));
+        } catch (\Exception $e) {
+            return redirect()->back()->with("error", $e->getMessage());
+        }
     }
 
     /**

@@ -9,7 +9,9 @@ class ProductService
 {
     public function getProducts()
     {
-        return Product::query();
+        return Product::query()->whereHas('company', function ($query) {
+            $query->whereNull('deleted_at');
+        });
     }
 
     public function search($query)
@@ -62,10 +64,6 @@ class ProductService
     {
         $column = $this->orderBy();
         $dir = $this->direction();
-
-        if ($column === 'name') {
-            return $query->orderByRaw("name {$dir}");
-        }
 
         return $query->orderBy($column, $dir);
     }

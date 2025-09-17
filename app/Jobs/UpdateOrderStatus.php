@@ -26,6 +26,7 @@ class UpdateOrderStatus implements ShouldQueue
      */
     public function handle(OrderService $orderService): void
     {
+        //TODO Move to .env si mai multe
         $apiUrl = "https://undiscovered-api.hungrybytes.co/api/orders/{$this->order->id}";
 
         try {

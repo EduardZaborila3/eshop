@@ -103,6 +103,7 @@ class OrderController
 
 
     public function edit(Order $order) {
+        // TODO enum pt status
         if ($order->status != 'draft') {
             abort(403, 'You cannot edit this order');
         }
@@ -142,6 +143,14 @@ class OrderController
             $updatedOrder = $this->orderService->updateOrder($order, $data);
 
             $updatedOrder->products()->sync($data['product_ids']);
+
+            if ($data['status'] === 'created') {
+                foreach ($productIds as $productId) {
+                    $product = Product::find($productId);
+                    $product->stock -= $quantityPerProduct;
+                    $product->save();
+                }
+            }
 
             if (isset($data['status']) && $data['status'] !== $oldStatus) {
                 $userId = Auth::id();

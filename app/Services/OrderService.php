@@ -9,6 +9,7 @@ use App\Models\User;
 
 class OrderService
 {
+    // TODO S
     public function getOrders()
     {
         return Order::query();

@@ -34,5 +34,40 @@
                 {{ $slot }}
             </main>
         </div>
+        @if(session('success'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Toastify({
+                        text: "{{ session('success') }}",
+                        duration: 4000,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "green",
+                        close: true,
+                        style: {
+                            marginTop: "66px"
+                        }
+                    }).showToast();
+                });
+            </script>
+        @endif
+
+        @if(session('error'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Toastify({
+                        text: "{{ session('error') }}",
+                        duration: 4000,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "red",
+                        close: true,
+                        style: {
+                            marginTop: "66px"
+                        }
+                    }).showToast();
+                });
+            </script>
+        @endif
     </body>
 </html>

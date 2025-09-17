@@ -15,7 +15,7 @@
     </div>
 
     <div class="mt-10 font-semibold text-blue-400 space-x-4">
-        <x-button href="/products/{{ $product->id }}/edit">Edit Product</x-button>
+        <x-button href="/products/{{ $product->sku }}/edit">Edit Product</x-button>
         <a href="/products">Go back</a>
     </div>
 </x-app-layout>

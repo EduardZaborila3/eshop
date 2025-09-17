@@ -3,61 +3,31 @@
 namespace App\Services;
 
 use App\Models\Recipient;
+use Illuminate\Support\Facades\Log;
 
 class RecipientService
 {
-    public function getRecipients()
+    protected $query;
+    public function __construct()
     {
-        return Recipient::where('id', '!=', auth()->id());
+        $this->query = Recipient::query();
     }
 
-    public function search($query)
+    public function resetQuery(): self
     {
-        if (request()->filled('email')) {
-            return $query->where('email', 'LIKE', '%' . request()->input('email') . '%');
-        }
-
-        return $query;
-    }
-    public function perPage()
-    {
-        return request()->input('per_page', 15);
+        $this->query = Recipient::query();
+        return $this;
     }
 
-    public function orderBy()
+    public function getFilteredRecipients()
     {
-        $allowed = ['email'];
-        $col = request()->input('order_by', 'name');
-        return in_array($col, $allowed, true) ? $col : 'name';
+        return Recipient::query()
+            ->applyAllFilters();
     }
 
-    public function direction()
+    public function logInfo($message, $id, $ip)
     {
-        $dir = strtolower(request()->input('direction', 'asc'));
-        if (request()->input('order_by') == 'created_at') {
-            return $dir === 'desc' ? 'asc' : 'desc';
-        }
-        return $dir === 'desc' ? 'desc' : 'asc';
-    }
-
-    public function applyOrdering($query)
-    {
-        $column = $this->orderBy();
-        $dir = $this->direction();
-
-        if ($column === 'name') {
-            return $query->orderByRaw("name {$dir}");
-        }
-
-        return $query->orderBy($column, $dir);
-    }
-
-    public function whereActive($query, $isActive)
-    {
-        if ($isActive != null && $isActive != '') {
-            $query->where('is_active', $isActive);
-        }
-        return $query;
+        Log::info("User with ID {$id} " . $message . ". IP: {$ip}");
     }
 
     public function storeRecipient(array $data): Recipient

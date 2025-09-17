@@ -86,7 +86,7 @@
     </form>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
         @foreach($products as $product)
-            <a href="/products/{{ $product->id }}" class="block px-4 py-6 aspect-square border border-gray-300 rounded-lg hover:shadow-lg transition duration-300">
+            <a href="{{ route('products.show', $product) }}" class="block px-4 py-6 aspect-square border border-gray-300 rounded-lg hover:shadow-lg transition duration-300">
                 <div class="text-center">
                     <div class="font-bold text-xl text-blue-600">{{ $product->name }}</div>
 

@@ -4,31 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UserIndexRequest;
 use App\Models\User;
 use App\Services\UserService;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Nette\Schema\ValidationException;
 
 class UserController
 {
+    //TODO Refactoring
+    protected $query;
+    public function __construct(protected UserService $userService) {
+        $query = $this->userService->resetQuery();
+    }
 
-    public function __construct(protected UserService $userService ) {}
-
-    public function index()
+    public function index(UserIndexRequest $request)
     {
-        $query = $this->userService->getUsers();
-        $query = $this->userService->whereRole($query, request()->input('role'));
-        $query = $this->userService->whereActive($query, request()->input('is_active'));
-        $query = $this->userService->search($query);
+        try{
+            $users = $this->userService->getFilteredUsers($request->validated());
+            $this->userService->logInfo("accessed the users index page", Auth::id(), request()->ip());
 
-        $users = $this->userService->applyOrdering($query)
-            ->simplePaginate($this->userService->perPage());
+            return view('users.index', ['users' => $users]);
+        } catch (ValidationException $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
 
-        $id = Auth::id();
-        $ip = request()->ip();
-        Log::info("User with ID {$id} accessed the users index page. IP: {$ip}");
 
-        return view('users.index', ['users' => $users]);
     }
 
     public function show(User $user)
@@ -37,7 +43,7 @@ class UserController
     }
 
     public function create() {
-        if (Auth::user()->role !== 'admin') {
+        if (!$this->userService->checkAdmin(Auth::user())) {
             abort(403, "You dont have the permission to create users.");
         }
         return view('users.create');
@@ -45,8 +51,8 @@ class UserController
 
     public function edit(User $user)
     {
-        if (Auth::user()->role != 'admin' && Auth::user()->id != $user->id) {
-            abort(403, "You cannot edit this user.");
+        if (!$this->userService->checkAdmin(Auth::user()) && Auth::user()->id != $user->id) {
+            abort(403, "You are trying to do naughty things.");
         }
         return view('users.edit', ['user' => $user]);
     }
@@ -56,10 +62,7 @@ class UserController
         try {
             $user = $this->userService->storeUser($request->validated());
 
-            $id = Auth::id();
-            $userCreatedId = $user->id;
-            $ip = request()->ip();
-            Log::info("User with ID {$id} created a new user with ID {$userCreatedId}. IP: {$ip}");
+            $this->userService->logInfo("created a new user with ID {$user->id}", Auth::id(), request()->ip());
 
             return redirect()->route('users.show', ['user' => $user])
                 ->with('success', 'User created successfully!');
@@ -73,10 +76,7 @@ class UserController
         try {
             $user = $this->userService->updateUser($user, $request->validated());
 
-            $id = Auth::id();
-            $id_2 = $user->id;
-            $ip = request()->ip();
-            Log::info("User with ID {$id} changed profile for user with ID {$id_2}. IP: {$ip}");
+            $this->userService->logInfo("updated profile for user with ID {$user->id}", Auth::id(), request()->ip());
 
             return redirect()->route('users.show', ['user' => $user])
                 ->with('success', 'User updated successfully!');
@@ -90,10 +90,7 @@ class UserController
         try {
             $user->delete();
 
-            $id = Auth::id();
-            $id_2 = $user->id;
-            $ip = request()->ip();
-            Log::info("User with ID {$id} deleted user with ID {$id_2}. IP: {$ip}");
+            $this->userService->logInfo("deleted user with ID {$user->id}", Auth::id(), request()->ip());
 
             return redirect()->route('users.index')
                 ->with('success', 'Recipient deleted successfully!');;

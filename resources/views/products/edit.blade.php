@@ -2,7 +2,7 @@
     <x-slot:heading>
         Edit Product: {{ $product->name }}
     </x-slot:heading>
-    <form method="POST" action="/products/{{ $product->id }}">
+    <form method="POST" action="{{ route('products.show', $product) }}">
         @csrf
         @method('PATCH')
         <div class="space-y-12">
@@ -38,7 +38,7 @@
                                 />
                             </div>
                             @error('price')
-                            <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
+                                <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
@@ -107,7 +107,7 @@
             </div>
 
             <div class="flex items-center gap-x-6">
-                <a href="/products/{{ $product->id }}" type="button"
+                <a href="{{ route('products.show', $product) }}" type="button"
                    class="rounded-md bg-gray-400 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                     Cancel</a>
                 <div>

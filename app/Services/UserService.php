@@ -5,67 +5,40 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
-    public function getUsers()
+    protected $query;
+    public function __construct()
     {
-        return User::where('id', '!=', auth()->id());
-    }
-    public function perPage()
-    {
-        return request()->input('per_page', 15);
+        $this->query = User::query();
     }
 
-    public function search($query)
+    public function resetQuery(): self
     {
-        if (request()->filled('email')) {
-            return $query->where('email', 'LIKE', '%' . request()->input('email') . '%');
-        }
-
-        return $query;
+        $this->query = User::query();
+        return $this;
     }
 
-    public function orderBy()
+    public function checkAdmin($user)
     {
-        $allowed = ['email', 'created_at'];
-        $col = request()->input('order_by', 'name');
-        return in_array($col, $allowed, true) ? $col : 'name';
+        return $user->role === 'admin' ? 1 : 0;
     }
 
-    public function direction()
+    public function getFilteredUsers(array $filters)
     {
-        $dir = strtolower(request()->input('direction', 'asc'));
-        return $dir === 'desc' ? 'desc' : 'asc';
+        return User::query()
+            ->excludeCurrent()
+            ->applyAllFilters(
+                $filters['order_by'] ?? 'email',
+                $filters['order'] ?? 'asc',
+            );
     }
 
-    public function applyOrdering($query)
+    public function logInfo($message, $id, $ip)
     {
-        $column = $this->orderBy();
-        $dir = $this->direction();
-
-        if ($column === 'name') {
-            return $query->orderByRaw("name {$dir}");
-        }
-
-        return $query->orderBy($column, $dir);
-    }
-
-
-    public function whereRole($query, $role)
-    {
-        if ($role) {
-            $query->where('role', $role);
-        }
-        return $query;
-    }
-
-    public function whereActive($query, $isActive)
-    {
-        if ($isActive != null && $isActive != '') {
-            $query->where('is_active', $isActive);
-        }
-        return $query;
+        Log::info("User with ID {$id} " . $message . ". IP: {$ip}");
     }
 
     public function storeUser(array $data): User

@@ -12,20 +12,16 @@ use Illuminate\Support\Facades\Log;
 
 class RecipientController
 {
-    public function __construct(protected RecipientService $recipientService) {}
+    // TODO Refactor la toate controllere
+    protected $query;
+    public function __construct(protected RecipientService $recipientService) {
+        $query = $this->recipientService->resetQuery();
+    }
     public function index()
     {
-        $query = $this->recipientService->getRecipients();
-        $query = $this->recipientService->whereActive($query, request()->input('is_active'));
+        $recipients = $this->recipientService->getFilteredRecipients();
 
-        $recipients = $this->recipientService->search($query);
-
-        $recipients = $this->recipientService->applyOrdering($query)
-            ->simplePaginate($this->recipientService->perPage());
-
-        $id = Auth::id();
-        $ip = request()->ip();
-        Log::info("User with ID {$id} accessed the recipients index page. IP: {$ip}");
+        $this->recipientService->logInfo("accessed the users index page", Auth::id(), request()->ip());
 
         return view('recipients.index', ['recipients' => $recipients]);
     }
@@ -50,10 +46,7 @@ class RecipientController
         try {
             $recipient = $this->recipientService->storeRecipient($request->validated());
 
-            $id = Auth::id();
-            $recipientId = $recipient->id;
-            $ip = request()->ip();
-            Log::info("User with ID {$id} added a new recipient with ID {$recipientId}. IP: {$ip}");
+            $this->recipientService->logInfo("added a new recipient with ID {$recipient->id}", Auth::id(), request()->ip());
 
             return redirect()->route('recipients.show', ['recipient' => $recipient])
                 ->with('success', 'Recipient created successfully!');
@@ -67,10 +60,7 @@ class RecipientController
         try {
             $recipient = $this->recipientService->updateRecipient($recipient, $request->validated());
 
-            $id = Auth::id();
-            $recipientId = $recipient->id;
-            $ip = request()->ip();
-            Log::info("User with ID {$id} updated recipient with ID {$recipientId}. IP: {$ip}");
+            $this->recipientService->logInfo("updated recipient with ID {$recipient->id}", Auth::id(), request()->ip());
 
             return redirect()->route('recipients.show', ['recipient' => $recipient])
                 ->with('success', 'Recipient updated successfully!');
@@ -84,10 +74,7 @@ class RecipientController
         try {
             $recipient->delete();
 
-            $id = Auth::id();
-            $recipientId = $recipient->id;
-            $ip = request()->ip();
-            Log::info("User with ID {$id} deleted recipient with ID {$recipientId}. IP: {$ip}");
+            $this->recipientService->logInfo("deleted recipient with ID {$recipient->id}", Auth::id(), request()->ip());
 
             return redirect()->route('recipients.index')
                 ->with('success', 'Recipient deleted successfully!');

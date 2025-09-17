@@ -70,4 +70,5 @@
                 </div>
             </a>
         @endforeach
+    {{ $recipients->withQueryString()->links() }}
 </x-app-layout>
